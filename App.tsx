@@ -10,17 +10,12 @@ import type {PropsWithChildren} from 'react';
 import {SafeAreaView} from 'react-native';
 import ScreenA from './src/screens/ScreenA';
 import {NavigationContainer} from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-
-
-const Stack = createStackNavigator();
+import MainNavigation from './src/components/MainNavigation';
 function App(): React.JSX.Element {
   return (
     // <ScreenA/>
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={ScreenA} />
-      </Stack.Navigator>
+      <MainNavigation/>
     </NavigationContainer>
   );
 }
