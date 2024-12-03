@@ -10,7 +10,7 @@ import type {PropsWithChildren} from 'react';
 import {SafeAreaView} from 'react-native';
 import ScreenA from './src/screens/ScreenA';
 import {NavigationContainer} from '@react-navigation/native';
-import MainNavigation from './src/components/MainNavigation';
+import MainNavigation from './src/navigations/MainNavigation';
 function App(): React.JSX.Element {
   return (
     // <ScreenA/>
