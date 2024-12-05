@@ -9,6 +9,9 @@ import ForgotPassword from '../screens/forgotPassword/ForgotPassword';
 import NewPassword from '../screens/forgotPassword/NewPassword';
 import Home from '../screens/home/Home';
 import CapturedData from '../screens/capturedData/CapturedData.';
+import SendTo from '../screens/sendTo/SendTo';
+import Feeds from '../screens/feeds/Feeds';
+import Profile from '../screens/profile/Profile';
 
 const Stack = createStackNavigator();
 const MainNavigation = () => {
@@ -22,6 +25,9 @@ const MainNavigation = () => {
       <Stack.Screen name="NewPassword" component={NewPassword} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="SendTo" component={SendTo} />
+      <Stack.Screen name="Feeds" component={Feeds} />
+      <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="CapturedData" component={CapturedData} />
     </Stack.Navigator>
   );

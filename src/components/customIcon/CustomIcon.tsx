@@ -11,6 +11,7 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 const Icon = ({name, color, size, iconFamily}: any) => {
   return (
@@ -35,9 +36,14 @@ const Icon = ({name, color, size, iconFamily}: any) => {
         <Entypo name={name} size={size} color={color} />
       ) : iconFamily === 'octicons' ? (
         <Octicons name={name} size={size} color={color} />
-      ) : iconFamily === 'EvilIcons' ? (
+      ) 
+      : iconFamily === 'EvilIcons' ? (
         <Octicons name={name} size={size} color={color} />
-      ) : (
+      )
+      : iconFamily === 'SimpleLineIcons' ? (
+        <SimpleLineIcons name={name} size={size} color={color} />
+      )
+       : (
         <MaterialCommunityIcons name={name} size={size} color={color} />
       )}
     </View>
