@@ -69,13 +69,13 @@ export default function Home({navigation}:any) {
 
       {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={()=>navigation.navigate('Feeds')}>
           <Icon1 name="play-outline" size={28} iconFamily='ionic' color="white" />
         </TouchableOpacity>
         <TouchableOpacity onPress={()=>navigation.navigate('CapturedData')}>
           <View style={styles.cameraButton} />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={()=>navigation.navigate('Profile')}>
           <Icon1 name="person-outline" size={28} iconFamily='ionic' color="white" />
         </TouchableOpacity>
       </View>

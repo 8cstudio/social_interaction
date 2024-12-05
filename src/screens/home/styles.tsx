@@ -54,8 +54,7 @@ export const styles = StyleSheet.create({
      left: 0,
     marginLeft:16,
 
-    top: 60,
-    backgroundColor: 'gray',
+    top: 60,backgroundColor: 'rgba(128, 128, 128, 0.5)',
     alignItems: 'center',
     alignSelf: 'flex-start',
     paddingVertical:10,
