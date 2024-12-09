@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import {colors} from '../../assets/data/colors';
 import Icon from '../../components/customIcon/CustomIcon';
+import { useNavigation } from '@react-navigation/native';
 
 const mockData = [
   {id: 1, name: 'Sara', status: 'New Footage', time: '11:40 pm', icon: '🔥'},
@@ -19,7 +20,8 @@ const mockData = [
   {id: 5, name: 'SA.', status: 'Received', time: '11 / 9', icon: '💛'},
 ];
 
-const Messages = ({navigation}:any) => {
+const Messages = () => {
+  const navigation :any= useNavigation();
   const renderChatItem = ({item}: any) => (
     <TouchableOpacity
     onPress={()=>navigation.navigate('ChatScreen')}
@@ -54,7 +56,7 @@ const Messages = ({navigation}:any) => {
   );
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+    <SafeAreaView style={{flex: 1,width:'100%', backgroundColor: '#fff'}}>
       <View style={{flex: 1, paddingHorizontal: 20}}>
         {/* Header */}
         <View style={styles.header}>

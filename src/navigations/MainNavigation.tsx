@@ -21,6 +21,7 @@ import HelpScreen from '../screens/settings/HelpScreen';
 import NotificationsSettings from '../screens/settings/NotificationsSettings';
 import AccountSettings from '../screens/settings/AccountSettings';
 import Messages from '../screens/messages/Messages';
+import CustomBottomNavigation from '../screens/bottomTabs/BottomTabs';
 
 const Stack = createStackNavigator();
 const MainNavigation = () => {
@@ -33,6 +34,7 @@ const MainNavigation = () => {
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen name="NewPassword" component={NewPassword} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
+      <Stack.Screen name="BottomBar" component={CustomBottomNavigation} />
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="SendTo" component={SendTo} />
       <Stack.Screen name="Feeds" component={Feeds} />
