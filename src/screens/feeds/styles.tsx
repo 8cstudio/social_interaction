@@ -17,6 +17,7 @@ export const styles = StyleSheet.create({
     width: width,
     height: height,
     justifyContent: 'center',
+    padding:10
   },
   modalContainer: {
     flex: 1,
