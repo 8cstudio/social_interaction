@@ -10,20 +10,22 @@ import {
 } from 'react-native';
 import {colors} from '../../assets/data/colors';
 import Icon from '../../components/customIcon/CustomIcon';
+import {useNavigation} from '@react-navigation/native';
 
 const mockData = [
   {id: 1, name: 'Sara', status: 'New Footage', time: '11:40 pm', icon: '🔥'},
   {id: 2, name: 'Muhammad', status: 'New chat', time: '9:30 am', icon: '🔥'},
-  {id: 3, name: 'Shahed', status: 'Opened', time: 'Yesterday', icon: '✌️'},
-  {id: 4, name: 'Yasser', status: 'Delivered', time: 'Sunday', icon: ''},
-  {id: 5, name: 'SA.', status: 'Received', time: '11 / 9', icon: '💛'},
+  // {id: 3, name: 'Shahed', status: 'Opened', time: 'Yesterday', icon: '✌️'},
+  // {id: 4, name: 'Yasser', status: 'Delivered', time: 'Sunday', icon: ''},
+  // {id: 5, name: 'SA.', status: 'Received', time: '11 / 9', icon: '💛'},
 ];
 
-const Messages = ({navigation}:any) => {
+const Messages = () => {
+  const navigation: any = useNavigation();
   const renderChatItem = ({item}: any) => (
     <TouchableOpacity
-    onPress={()=>navigation.navigate('ChatScreen')}
-    style={styles.chatItem}>
+      onPress={() => navigation.navigate('ChatScreen')}
+      style={styles.chatItem}>
       <Image
         source={{uri: 'https://via.placeholder.com/50'}} // Replace with actual profile image URLs
         style={styles.profileImage}
@@ -54,7 +56,7 @@ const Messages = ({navigation}:any) => {
   );
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+    <SafeAreaView style={{flex: 1, width: '100%', backgroundColor: '#fff'}}>
       <View style={{flex: 1, paddingHorizontal: 20}}>
         {/* Header */}
         <View style={styles.header}>
@@ -96,20 +98,19 @@ const Messages = ({navigation}:any) => {
         </View>
 
         {/* Notifications */}
-        <TouchableOpacity style={styles.notificationBar}>
+        <TouchableOpacity disabled style={styles.notificationBar}>
           <Text style={styles.notificationText}>
             Notifications <Text style={styles.notificationDot}>●</Text>
           </Text>
         </TouchableOpacity>
 
         {/* Live Chat */}
-        <TouchableOpacity style={styles.section}>
+        <TouchableOpacity disabled style={styles.section}>
           <Text style={styles.sectionTitle}>Live Chat</Text>
         </TouchableOpacity>
-<View style={styles.section}>
-
+        <View style={styles.section}>
           <Text style={styles.sectionTitle}>Chat (2)</Text>
-</View>
+        </View>
         {/* Chat List */}
         <View style={{}}>
           <FlatList
@@ -120,7 +121,7 @@ const Messages = ({navigation}:any) => {
         </View>
 
         {/* Friends Section */}
-        <TouchableOpacity style={styles.section}>
+        <TouchableOpacity disabled style={styles.section}>
           <Text style={styles.sectionTitle}>Friends</Text>
         </TouchableOpacity>
       </View>
@@ -160,15 +161,15 @@ const styles = StyleSheet.create({
   },
   section: {
     marginVertical: 10,
-    padding:10,
-    borderRadius:10,
-    backgroundColor:  colors.greynew,
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: colors.greynew,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 5,
-    color:  colors.black,
+    color: colors.black,
   },
   chatItem: {
     flexDirection: 'row',

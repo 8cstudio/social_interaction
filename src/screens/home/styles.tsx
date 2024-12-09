@@ -4,6 +4,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'black',
+    width: '100%',
   },
   header: {
     flexDirection: 'row',
