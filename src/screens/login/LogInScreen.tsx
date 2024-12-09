@@ -327,7 +327,7 @@ const LoginScreen = ({navigation}: any) => {
                   : colors.black
               }
               btnTextColor={'#fff'}
-              onPress={()=>navigation.navigate('Home')}
+              onPress={()=>navigation.navigate('BottomBar')}
               borderRadius={50}
             />
           </View>
