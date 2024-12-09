@@ -34,8 +34,9 @@ const MainNavigation = () => {
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen name="NewPassword" component={NewPassword} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
-      <Stack.Screen name="BottomBar" component={CustomBottomNavigation} />
-      <Stack.Screen name="Home" component={Home} />
+
+      <Stack.Screen name="Home" component={CustomBottomNavigation} />
+
       <Stack.Screen name="SendTo" component={SendTo} />
       <Stack.Screen name="Feeds" component={Feeds} />
       <Stack.Screen name="Profile" component={Profile} />
