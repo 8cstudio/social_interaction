@@ -283,27 +283,28 @@ const SignUp = ({navigation}: any) => {
           </View> */}
           <View style={{width: '100%', marginTop: 10}}>
             <CustomButton
-              disabled={
-                !(formErrors.userNameError === 'true') ||
-                !(formErrors.emailError === 'true') ||
-                !(formErrors.passwordError === 'true') ||
-                !(formErrors.confirmPasswordError === 'true') ||
-                formData.password !== formData.confirmPassword
-              }
+              // disabled={
+              //   !(formErrors.userNameError === 'true') ||
+              //   !(formErrors.emailError === 'true') ||
+              //   !(formErrors.passwordError === 'true') ||
+              //   !(formErrors.confirmPasswordError === 'true') ||
+              //   formData.password !== formData.confirmPassword
+              // }
               title={'Sign Up'}
               btnColor={
-                !(formErrors.userNameError === 'true') ||
-                !(formErrors.emailError === 'true') ||
-                !(formErrors.passwordError === 'true') ||
-                !(formErrors.confirmPasswordError === 'true') ||
-                formData.password !== formData.confirmPassword
-                  ? colors.gray
-                  : colors.black
+                // !(formErrors.userNameError === 'true') ||
+                // !(formErrors.emailError === 'true') ||
+                // !(formErrors.passwordError === 'true') ||
+                // !(formErrors.confirmPasswordError === 'true') ||
+                // formData.password !== formData.confirmPassword
+                //   ? colors.gray
+                //   :
+                   colors.black
               }
               btnTextColor={'#fff'}
               icon={undefined}
               // onPress={handleSignUp}
-              onPress={()=>navigation.navigate('LoginScreen')}
+              onPress={()=>navigation.goBack()}
               borderRadius={50}
               isLoading={isLoading}
             />

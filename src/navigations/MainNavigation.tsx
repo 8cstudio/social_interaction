@@ -12,6 +12,15 @@ import CapturedData from '../screens/capturedData/CapturedData.';
 import SendTo from '../screens/sendTo/SendTo';
 import Feeds from '../screens/feeds/Feeds';
 import Profile from '../screens/profile/Profile';
+import SettingsScreen from '../screens/settings/Settings';
+import AddFriendsScreen from '../screens/addFriends/AddFriends';
+import ChatScreen from '../screens/chatScreen/ChatScreen';
+import ChatsSettings from '../screens/settings/ChatsSettings';
+import StorageAndData from '../screens/settings/StorageAndData';
+import HelpScreen from '../screens/settings/HelpScreen';
+import NotificationsSettings from '../screens/settings/NotificationsSettings';
+import AccountSettings from '../screens/settings/AccountSettings';
+import Messages from '../screens/messages/Messages';
 
 const Stack = createStackNavigator();
 const MainNavigation = () => {
@@ -28,7 +37,16 @@ const MainNavigation = () => {
       <Stack.Screen name="SendTo" component={SendTo} />
       <Stack.Screen name="Feeds" component={Feeds} />
       <Stack.Screen name="Profile" component={Profile} />
+      <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
+      <Stack.Screen name="AddFriendsScreen" component={AddFriendsScreen} />
+      <Stack.Screen name="ChatScreen" component={ChatScreen} />
       <Stack.Screen name="CapturedData" component={CapturedData} />
+      <Stack.Screen name="ChatsSettings" component={ChatsSettings} />
+      <Stack.Screen name="StorageAndData" component={StorageAndData} />
+      <Stack.Screen name="HelpScreen" component={HelpScreen} />
+      <Stack.Screen name="NotificationsSettings" component={NotificationsSettings} />
+      <Stack.Screen name="AccountSettings" component={AccountSettings} />
+      <Stack.Screen name="Messages" component={Messages} />
     </Stack.Navigator>
   );
 };
