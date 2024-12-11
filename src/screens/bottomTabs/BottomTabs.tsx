@@ -62,7 +62,6 @@ const CustomBottomNavigation = ({navigation,route}:any) => {
           ))}
         </Animated.View>
       </View>
-
       <View style={styles.bottomNav}>
         <TouchableOpacity style={{borderWidth:1, borderColor:activeTab===2? colors.black:colors.white, borderRadius:50, padding:5,
           alignItems: "center",
@@ -101,7 +100,6 @@ const styles = StyleSheet.create({
   tabPage: {
     width: SCREEN_WIDTH,
     height: SCREEN_HEIGHT-40, // Adjust the height to fill available space excluding the bottom nav
-    
     justifyContent: 'center',
     alignItems: 'center',
     // backgroundColor: 'red', // You can change the background color here
