@@ -314,20 +314,21 @@ const LoginScreen = ({navigation}: any) => {
           </View>
           <View style={{width: '100%'}}>
             <CustomButton
-              disabled={
-                !(formErrors.emailError === 'true') ||
-                !(formErrors.passwordaError === 'true')
-              }
+              // disabled={
+              //   !(formErrors.emailError === 'true') ||
+              //   !(formErrors.passwordaError === 'true')
+              // }
               // isLoading={isLoading}
               title={'Sign In'}
               btnColor={
-                !(formErrors.emailError === 'true') ||
-                !(formErrors.passwordaError === 'true')
-                  ? colors.gray
-                  : colors.black
+                // !(formErrors.emailError === 'true') ||
+                // !(formErrors.passwordaError === 'true')
+                //   ? colors.gray
+                //   : 
+                  colors.black
               }
               btnTextColor={'#fff'}
-              onPress={()=>navigation.navigate('BottomBar')}
+              onPress={()=>navigation.navigate('Home')}
               borderRadius={50}
             />
           </View>

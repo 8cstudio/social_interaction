@@ -1,4 +1,5 @@
 import { Dimensions } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export const {height, width} = Dimensions.get('screen');
 export function fontSize(font: number) {
@@ -17,3 +18,4 @@ export function fontSize(font: number) {
   
     elevation: 9,
   };
+  export  const insect = useSafeAreaInsets();

@@ -11,6 +11,9 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { styles } from './styles';
 import { useNavigation } from '@react-navigation/native';
 
+import { colors } from '../../assets/data/colors';
+
+
 export default function Home() {
   
   const navigation :any= useNavigation();
@@ -27,16 +30,16 @@ export default function Home() {
           alignItems:'center',
         }}>
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={()=>navigation.navigate('AddFriendsScreen')} >
           <Icon1 name="adduser" iconFamily='antDesign' size={24} color="white" />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={()=>navigation.navigate('AddFriendsScreen',{from:'search'})} >
         <Icon1 name="search1" iconFamily='antDesign' size={24} color="white" />
         </TouchableOpacity>
         </View>
 
 
-        <TouchableOpacity>
+        <TouchableOpacity  onPress={()=>navigation.navigate('Profile')}>
           <View style={styles.avatar} >
             
           <Icon1 name="person" size={24} iconFamily='ionic' color="white" />
@@ -70,18 +73,23 @@ export default function Home() {
         </TouchableOpacity>
       </View>
 
-      {/* Bottom Navigation */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity onPress={()=>navigation.navigate('Feeds')}>
-          <Icon1 name="play-outline" size={28} iconFamily='ionic' color="white" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={()=>navigation.navigate('CapturedData')}>
-          <View style={styles.cameraButton} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={()=>navigation.navigate('Profile')}>
-          <Icon1 name="person-outline" size={28} iconFamily='ionic' color="white" />
-        </TouchableOpacity>
-      </View>
     </SafeAreaView>
   );
 }
+
+      // {/* Bottom Navigation */}
+      // <View style={styles.bottomNav}>
+      //   <TouchableOpacity style={{borderWidth:1, borderColor:colors.white, borderRadius:50, padding:5,
+      //     alignItems: "center",
+      //     justifyContent: "center",
+      //   }}  onPress={()=>navigation.replace('Home',{id:0})}>
+      //     <Icon1 name="play-outline" size={18} iconFamily='ionic' color="white" />
+      //   </TouchableOpacity>
+      //   <TouchableOpacity onPress={()=>navigation.navigate('CapturedData')}>
+      //     <View style={styles.cameraButton} />
+      //   </TouchableOpacity>
+      //   {/* <View style={{width:28}}></View> */}
+      //   <TouchableOpacity onPress={()=>navigation.replace('Home',{id:2})}>
+      //     <Icon1 name="chat-bubble" size={28} iconFamily='material' color="white" />
+      //   </TouchableOpacity>
+      // </View>

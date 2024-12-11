@@ -14,6 +14,7 @@ import {
 import {colors} from '../../assets/data/colors';
 import Icon from '../../components/customIcon/CustomIcon';
 import {styles} from './styles';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const Feeds = ({navigation}: any) => {
   const images = [
@@ -45,6 +46,7 @@ const Feeds = ({navigation}: any) => {
   const [commentsVisible, setCommentsVisible] = useState(false);
   const [currentComments, setCurrentComments] = useState([]);
 
+  const insect = useSafeAreaInsets();
   // Sample comments data
   const commentsData: any = {
     '1': [
@@ -74,7 +76,7 @@ const Feeds = ({navigation}: any) => {
   };
 
   const renderItem = ({item}: any) => (
-    <View style={styles.imageContainer}>
+    <View style={[styles.imageContainer,{bottom: insect.bottom,}]}>
       <ImageBackground
         source={item.uri}
         style={styles.image}
@@ -138,7 +140,7 @@ const Feeds = ({navigation}: any) => {
             )}
           </View>
         </View>
-        <View style={{position:'absolute', bottom:80, left:20,flexDirection:"row", alignItems:'center'}}>
+        <View style={{position:'absolute', bottom:100, left:20,flexDirection:"row", alignItems:'center'}}>
         <Image source={require('../../assets/images/profile.png')} style={{height:35, width:35, borderRadius:35, borderWidth:2, borderColor: colors.darkBlue}}/>
         <View style={{ marginLeft:10, marginTop:20, width:'80%'}}>
           <Text style={{color:colors.white}}>@{item.userName}</Text>
@@ -150,7 +152,7 @@ const Feeds = ({navigation}: any) => {
   );
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1 ,}}>
       <FlatList
         data={images}
         keyExtractor={item => item.id}

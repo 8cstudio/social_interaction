@@ -11,8 +11,10 @@ import {
 import { colors } from '../../assets/data/colors';
 import CustomTextInput from '../../components/textInput/CustomTextInput';
 import Icon from '../../components/customIcon/CustomIcon';
+import { fontSize } from '../../assets/data/TypeScript';
 
-const AddFriendsScreen = ({navigation}:any) => {
+const AddFriendsScreen = ({navigation, route}:any) => {
+  const from  = route?.params?.from?? null;
   const [searchText, setSearchText] = useState('');
   const suggestions = [
     {
@@ -48,7 +50,9 @@ const AddFriendsScreen = ({navigation}:any) => {
         <Text style={styles.name}>{item.name}</Text>
         <Text style={styles.username}>{item.username}</Text>
       </View>
-      <TouchableOpacity onPress={()=>navigation.navigate('ChatScreen')}>
+      <TouchableOpacity 
+      // onPress={()=>navigation.navigate('ChatScreen')}
+        >
         <Icon name="account-plus" size={24} color="#000" /> 
       </TouchableOpacity>
     </View>
@@ -57,11 +61,21 @@ const AddFriendsScreen = ({navigation}:any) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Add Friends</Text>
-        <TouchableOpacity onPress={()=>navigation.navigate('Messages')}>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Icon
+          size={fontSize(25)}
+          name={'arrow-back-outline'}
+          color={'#000'}
+          iconFamily={'ionic'}
+        />
+      </TouchableOpacity>
+        <Text style={styles.title}>{from==='search'?'Search':'Add Friends'}</Text>
+        {/* <TouchableOpacity 
+        onPress={()=>navigation.navigate('Messages')}
+        >
           <Icon name='facebook-messenger' color= {colors.black} size={25}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       
       <View style={{width: '100%', height: 60, marginTop: 15}}>
@@ -106,11 +120,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     paddingHorizontal: 16,
-    paddingTop: 40,
+    paddingTop: 20,
   },
   header: {
+    gap:20,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 20,
   },

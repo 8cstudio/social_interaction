@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import {colors} from '../../assets/data/colors';
 import Icon from '../../components/customIcon/CustomIcon';
-
 import {useNavigation} from '@react-navigation/native';
 
 
@@ -63,7 +62,24 @@ const Messages = () => {
       <View style={{flex: 1, paddingHorizontal: 20}}>
         {/* Header */}
         <View style={styles.header}>
+
+          <View style={{
+            flexDirection: 'row',
+            // justifyContent:'space-between',
+            alignItems: 'center',
+            gap: 10,
+          }}>
+
+        <TouchableOpacity onPress={()=>navigation.navigate('Profile')}>
+          <View style={styles.avatar} >
+            
+          <Icon name="person" size={24} iconFamily='ionic' color="white" />
+          </View>
+        </TouchableOpacity>
           <Text style={styles.title}>Chat</Text>
+          </View>
+
+
           <View style={styles.headerIcons}>
             {/* Replace with actual icons */}
             <View
@@ -163,7 +179,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   section: {
-    marginVertical: 10,
+    marginVertical: 5 ,
     padding: 10,
     borderRadius: 10,
     backgroundColor: colors.greynew,
@@ -201,6 +217,15 @@ const styles = StyleSheet.create({
   chatTime: {
     fontSize: 12,
     color: '#aaa',
+  },
+  
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'gray',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
