@@ -3,18 +3,23 @@ import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from '
 import Messages from '../messages/Messages';
 import Home from '../home/Home';
 import Profile from '../profile/Profile';
+import Icon from '../../components/customIcon/CustomIcon';
+import { colors } from '../../assets/data/colors';
+import { insect } from '../../assets/data/TypeScript';
+import Feeds from '../feeds/Feeds';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('screen');
 
-const CustomBottomNavigation = () => {
-  const [activeTab, setActiveTab] = useState(0);
+const CustomBottomNavigation = ({navigation,route}:any) => {
+  const id = route?.params?.id ?? null;
+  const [activeTab, setActiveTab] = useState(id?id:0);
   const [startX, setStartX] = useState(0);
-  const tabNames = ['Chats', 'Home', 'Profile'];
+  const tabNames = ['chat-processing-outline', 'home-circle-outline', 'account-circle-outline'];
   const translateX = useRef(new Animated.Value(0)).current;
-  const handleTouchStart = (e) => {
+  const handleTouchStart = (e:any) => {
     setStartX(e.nativeEvent.pageX);
   };
-  const handleTouchEnd = (e) => {
+  const handleTouchEnd = (e:any) => {
     const endX = e.nativeEvent.pageX;
     const distance = startX - endX;
 
@@ -30,6 +35,8 @@ const CustomBottomNavigation = () => {
     useNativeDriver: true,
   }).start();
 
+  console.log(activeTab);
+  
   return (
     <View style={styles.container}>
       <View
@@ -48,7 +55,7 @@ const CustomBottomNavigation = () => {
           {tabNames.map((tab, index) => (
             <View key={index} style={styles.tabPage}>
                 {
-                    index===0?<Messages/>: index===1?<Home/>:<Profile/>
+                    index===0?<Feeds/>: index===1?<Home/>:<Messages/>
                 }
                 
             </View>
@@ -56,20 +63,24 @@ const CustomBottomNavigation = () => {
         </Animated.View>
       </View>
 
-      {/* Bottom Navigation Bar */}
       <View style={styles.bottomNav}>
-        {tabNames.map((tab, index) => (
-          <TouchableOpacity
-            key={index}
-            style={styles.navItem}
-            onPress={() => setActiveTab(index)}
-          >
-            <Text style={[styles.navText, activeTab === index && styles.activeTab]}>
-              {tab}
-            </Text>
-          </TouchableOpacity>
-        ))}
+        <TouchableOpacity style={{borderWidth:1, borderColor:activeTab===2? colors.black:colors.white, borderRadius:50, padding:5,
+          alignItems: "center",
+          justifyContent: "center",
+        }}  onPress={()=>navigation.replace('Home',{id:0})}>
+          <Icon name={activeTab===0?"play":"play-outline"} size={18} iconFamily='ionic' color={activeTab===2? colors.black:"white"} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={activeTab===1?()=>navigation.navigate('CapturedData'):
+        ()=>navigation.replace('Home',{id:1})
+        }>
+          <View style={[styles.cameraButton,{borderColor:activeTab===2? colors.black:colors.white}]} />
+        </TouchableOpacity>
+        {/* <View style={{width:28}}></View> */}
+        <TouchableOpacity onPress={()=>navigation.replace('Home',{id:2})}>
+          <Icon name={activeTab===2? "chat-bubble":"chat-bubble-outline"} size={28} iconFamily='material' color= {activeTab===2? colors.black:"white"} />
+        </TouchableOpacity>
       </View>
+
     </View>
   );
 };
@@ -89,7 +100,8 @@ const styles = StyleSheet.create({
   },
   tabPage: {
     width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT - 90, // Adjust the height to fill available space excluding the bottom nav
+    height: SCREEN_HEIGHT-40, // Adjust the height to fill available space excluding the bottom nav
+    
     justifyContent: 'center',
     alignItems: 'center',
     // backgroundColor: 'red', // You can change the background color here
@@ -98,15 +110,15 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
   },
-  bottomNav: {
-    height:50,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    borderTopWidth: 1,
-    borderColor: '#ccc',
-    paddingVertical: 10,
-    backgroundColor: '#f8f8f8',
-  },
+  // bottomNav: {
+  //   height:50,
+  //   flexDirection: 'row',
+  //   justifyContent: 'space-around',
+  //   borderTopWidth: 1,
+  //   borderColor: '#ccc',
+  //   paddingVertical: 10,
+  //   backgroundColor: '#f8f8f8',
+  // },
   navItem: {
     alignItems: 'center',
   },
@@ -118,6 +130,23 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: 'bold',
   },
+  bottomNav: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 16,
+    left: 0,
+    right: 0,
+  },
+  cameraButton: {
+    width: 64,
+    height: 64,
+    borderWidth:2,
+    borderRadius: 32,
+    borderColor: 'white',
+  },
+
 });
 
 export default CustomBottomNavigation;
