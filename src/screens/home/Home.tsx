@@ -9,8 +9,11 @@ import {
 import Icon1 from '../../components/customIcon/CustomIcon';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { styles } from './styles';
+import { useNavigation } from '@react-navigation/native';
 
-export default function Home({navigation}:any) {
+export default function Home() {
+  
+  const navigation :any= useNavigation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
