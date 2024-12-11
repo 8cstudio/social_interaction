@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native';
+
 import Messages from '../messages/Messages';
 import Home from '../home/Home';
 import Profile from '../profile/Profile';
@@ -7,6 +8,7 @@ import Icon from '../../components/customIcon/CustomIcon';
 import { colors } from '../../assets/data/colors';
 import { insect } from '../../assets/data/TypeScript';
 import Feeds from '../feeds/Feeds';
+
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('screen');
 

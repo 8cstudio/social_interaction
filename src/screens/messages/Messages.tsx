@@ -12,6 +12,7 @@ import {colors} from '../../assets/data/colors';
 import Icon from '../../components/customIcon/CustomIcon';
 import {useNavigation} from '@react-navigation/native';
 
+
 const mockData = [
   {id: 1, name: 'Sara', status: 'New Footage', time: '11:40 pm', icon: '🔥'},
   {id: 2, name: 'Muhammad', status: 'New chat', time: '9:30 am', icon: '🔥'},
@@ -57,6 +58,7 @@ const Messages = () => {
 
   return (
     <SafeAreaView style={{flex: 1, width: '100%', backgroundColor: '#fff'}}>
+
       <View style={{flex: 1, paddingHorizontal: 20}}>
         {/* Header */}
         <View style={styles.header}>

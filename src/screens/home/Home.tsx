@@ -10,7 +10,9 @@ import Icon1 from '../../components/customIcon/CustomIcon';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { styles } from './styles';
 import { useNavigation } from '@react-navigation/native';
+
 import { colors } from '../../assets/data/colors';
+
 
 export default function Home() {
   
