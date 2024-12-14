@@ -15,6 +15,8 @@ import CustomTextInput from '../../components/textInput/CustomTextInput';
 import {colors} from '../../assets/data/colors';
 import {FirebaseError, validateField} from '../../assets/data/InputValidation';
 import {styles} from './styles';
+import CustomAlert from '../../components/modals/CustomAlert';
+import { handleSignUp, signInWithGoogle } from '../../components/functions/AuthFunctions';
 const SignUp = ({navigation}: any) => {
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [alertData, setAlertData] = useState({
@@ -23,9 +25,9 @@ const SignUp = ({navigation}: any) => {
     onPress: () => {},
   });
 
-  // const handleOK = () => {
-  //   setIsAlertVisible(false);
-  // };
+  const handleOK = () => {
+    setIsAlertVisible(false);
+  };
   // const [check, setCheck] = useState(false);
   const [isLoading, setISLoading] = useState(false);
 
@@ -133,14 +135,14 @@ const SignUp = ({navigation}: any) => {
   //   }
   //   return;
   // };
-  // function alert(title: string, message: string) {
-  //   setIsAlertVisible(true);
-  //   setAlertData({
-  //     title: title,
-  //     message: message,
-  //     onPress: handleOK,
-  //   });
-  // }
+  function alert(title: string, message: string) {
+    setIsAlertVisible(true);
+    setAlertData({
+      title: title,
+      message: message,
+      onPress: handleOK,
+    });
+  }
   return (
 
     <KeyboardAvoidingView
@@ -283,28 +285,28 @@ const SignUp = ({navigation}: any) => {
           </View> */}
           <View style={{width: '100%', marginTop: 10}}>
             <CustomButton
-              // disabled={
-              //   !(formErrors.userNameError === 'true') ||
-              //   !(formErrors.emailError === 'true') ||
-              //   !(formErrors.passwordError === 'true') ||
-              //   !(formErrors.confirmPasswordError === 'true') ||
-              //   formData.password !== formData.confirmPassword
-              // }
+              disabled={
+                !(formErrors.userNameError === 'true') ||
+                !(formErrors.emailError === 'true') ||
+                !(formErrors.passwordError === 'true') ||
+                !(formErrors.confirmPasswordError === 'true') ||
+                formData.password !== formData.confirmPassword
+              }
               title={'Sign Up'}
               btnColor={
-                // !(formErrors.userNameError === 'true') ||
-                // !(formErrors.emailError === 'true') ||
-                // !(formErrors.passwordError === 'true') ||
-                // !(formErrors.confirmPasswordError === 'true') ||
-                // formData.password !== formData.confirmPassword
-                //   ? colors.gray
-                //   :
+                !(formErrors.userNameError === 'true') ||
+                !(formErrors.emailError === 'true') ||
+                !(formErrors.passwordError === 'true') ||
+                !(formErrors.confirmPasswordError === 'true') ||
+                formData.password !== formData.confirmPassword
+                  ? colors.gray
+                  :
                    colors.black
               }
               btnTextColor={'#fff'}
               icon={undefined}
-              // onPress={handleSignUp}
-              onPress={()=>navigation.goBack()}
+              onPress={()=>handleSignUp(setISLoading, formData, navigation, setIsAlertVisible, setAlertData, alert)}
+              // onPress={()=>navigation.goBack()}
               borderRadius={50}
               isLoading={isLoading}
             />
@@ -355,7 +357,9 @@ const SignUp = ({navigation}: any) => {
                 source={require('../../assets/images/fb.png')}
               />
             </View> */}
-            <View
+            <TouchableOpacity 
+                disabled={isLoading}
+                onPress={() => signInWithGoogle(setISLoading, navigation)}
               style={{
                 height: 65,
                 width: 80,
@@ -370,7 +374,7 @@ const SignUp = ({navigation}: any) => {
                 style={{height: 30, width: 30}}
                 source={require('../../assets/images/google.png')}
               />
-            </View>
+            </TouchableOpacity>
             {/* <View
               style={{
                 height: 65,
@@ -410,13 +414,13 @@ const SignUp = ({navigation}: any) => {
           </View>
         </View>
       </ScrollView>
-      {/* <CustomAlert
+      <CustomAlert
         message={alertData.message}
         title={alertData.title}
         visible={isAlertVisible}
         onPress={alertData.onPress}
         onRequestClose={handleOK}
-      /> */}
+      />
     </SafeAreaView>
 
     </KeyboardAvoidingView>

@@ -11,21 +11,28 @@ import {
 import CustomTextInput from '../../components/textInput/CustomTextInput';
 import CustomButton from '../../components/customButton/CustomButton';
 import { validateField } from '../../assets/data/InputValidation';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+
 import { styles } from './styles';
 import { colors } from '../../assets/data/colors';
+import { handleLogin, signInWithGoogle } from '../../components/functions/AuthFunctions';
+import CustomAlert from '../../components/modals/CustomAlert';
 const LoginScreen = ({navigation}: any) => {
   // const dispatch = useDispatch();
   // const data = useSelector((state: any) => state.data);
-  // const [resend, setResend] = useState(false);
-  // const [isLoading, setISLoading] = useState(false);
+  const [resend, setResend] = useState(false);
+  const [isLoading, setISLoading] = useState(false);
   // const [check, setCheck]: any = useState(false);
   // const [googleSignedIn, setGoogleSignedIn]: any = useState(false);
-  // const [isAlertVisible, setIsAlertVisible] = useState(false);
-  // const [alertData, setAlertData] = useState({
-  //   title: '',
-  //   message: '',
-  //   onPress: () => {},
-  // });
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const [alertData, setAlertData] = useState({
+    title: '',
+    message: '',
+    onPress: () => {},
+  });
   const [userData, setUserData]: any = useState({
     email: '',
     userName: '',
@@ -157,9 +164,9 @@ const LoginScreen = ({navigation}: any) => {
       [`${fieldName}Error`]: error,
     });
   };
-  // const handleOK = () => {
-  //   setIsAlertVisible(false);
-  // };
+  const handleOK = () => {
+    setIsAlertVisible(false);
+  };
   // const handleLogin = async () => {
   //   setISLoading(true);
   //   auth()
@@ -216,18 +223,18 @@ const LoginScreen = ({navigation}: any) => {
   //   });
   // }
   // console.log(formErrors);
-  // function handleResend() {
-  //   auth()?.currentUser?.sendEmailVerification();
-  //   setResend(false);
-  //   setAlertData({
-  //     title: 'Success',
-  //     message: 'Verification email sent',
-  //     onPress: () => {
-  //       auth().signOut();
-  //       setIsAlertVisible(false);
-  //     },
-  //   });
-  // }
+  function handleResend() {
+    auth()?.currentUser?.sendEmailVerification();
+    setResend(false);
+    setAlertData({
+      title: 'Success',
+      message: 'Verification email sent',
+      onPress: () => {
+        auth().signOut();
+        setIsAlertVisible(false);
+      },
+    });
+  }
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity
@@ -240,7 +247,7 @@ const LoginScreen = ({navigation}: any) => {
       </TouchableOpacity>
       <ScrollView>
         <View style={styles.innerContainer}>
-          <Text style={styles.title}>Sign In Your Account</Text>
+          <Text style={styles.title}>Sign In To Your Account</Text>
           <Text style={styles.description}>
             Experience Fitness, Virtually Perfect.{'\n'}
             Try Before You Buy with Kenna Fitness AR
@@ -314,21 +321,28 @@ const LoginScreen = ({navigation}: any) => {
           </View>
           <View style={{width: '100%'}}>
             <CustomButton
-              // disabled={
-              //   !(formErrors.emailError === 'true') ||
-              //   !(formErrors.passwordaError === 'true')
-              // }
-              // isLoading={isLoading}
+              disabled={
+                !(formErrors.emailError === 'true') ||
+                !(formErrors.passwordaError === 'true')
+              }
+              isLoading={isLoading}
               title={'Sign In'}
               btnColor={
-                // !(formErrors.emailError === 'true') ||
-                // !(formErrors.passwordaError === 'true')
-                //   ? colors.gray
-                //   : 
+                !(formErrors.emailError === 'true') ||
+                !(formErrors.passwordaError === 'true')
+                  ? colors.gray
+                  : 
                   colors.black
               }
               btnTextColor={'#fff'}
-              onPress={()=>navigation.navigate('Home')}
+              onPress={()=>handleLogin(
+                setISLoading,
+                formData,
+                navigation,
+                setIsAlertVisible,
+                setResend,
+                setAlertData,
+              )}
               borderRadius={50}
             />
           </View>
@@ -359,7 +373,8 @@ const LoginScreen = ({navigation}: any) => {
               />
             </View> */}
             <TouchableOpacity
-              // onPress={signInWithGoogle}
+              disabled={isLoading}
+              onPress={() => signInWithGoogle(setISLoading, navigation)}
               style={styles.socialBox}>
               <Image
                 resizeMode="contain"
@@ -396,7 +411,7 @@ const LoginScreen = ({navigation}: any) => {
           </View>
         </View>
       </ScrollView>
-      {/* <CustomAlert
+      <CustomAlert
         message={alertData.message}
         title={alertData.title}
         visible={isAlertVisible}
@@ -404,7 +419,7 @@ const LoginScreen = ({navigation}: any) => {
         onRequestClose={handleOK}
         onResend={handleResend}
         resend={resend}
-      /> */}
+      />
     </SafeAreaView>
   );
 };
