@@ -22,6 +22,7 @@ import NotificationsSettings from '../screens/settings/NotificationsSettings';
 import AccountSettings from '../screens/settings/AccountSettings';
 import Messages from '../screens/messages/Messages';
 import CustomBottomNavigation from '../screens/bottomTabs/BottomTabs';
+import ProfileSetup from '../screens/profile/ProfileSetup';
 
 const Stack = createStackNavigator();
 const MainNavigation = () => {
@@ -34,6 +35,7 @@ const MainNavigation = () => {
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen name="NewPassword" component={NewPassword} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
+      <Stack.Screen name="ProfileSetup" component={ProfileSetup} />
 
       <Stack.Screen name="Home" component={CustomBottomNavigation} />
 
