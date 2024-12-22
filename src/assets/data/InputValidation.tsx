@@ -121,8 +121,18 @@ export const validateField = (fieldName: any, value: any) => {
       }
       return 'true';
     case 'phoneNumber':
-      if (!value) {
+      if (!value || value.length < 8) {
         return 'Phone Number is required.';
+      }
+      return 'true';
+    case 'description':
+      if (!value || value.length < 3) {
+        return 'description should be more than 3 characters long.';
+      }
+      return 'true';
+    case 'location':
+      if (!value || value.length < 5) {
+        return 'please type valid city...';
       }
       return 'true';
     default:

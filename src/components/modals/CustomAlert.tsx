@@ -47,7 +47,7 @@ const CustomAlert = ({
             </Text>
           )}
           <View style={{alignItems: 'center'}}>
-            <Text style={{fontSize: 18, marginBottom: 10}}>{message}</Text>
+            <Text style={{fontSize: 18, marginBottom: 10, color: colors.black}}>{message}</Text>
           </View>
           {resend &&<View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems:'center'}}>
             <TouchableOpacity disabled>

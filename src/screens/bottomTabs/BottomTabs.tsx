@@ -1,34 +1,46 @@
-import React, { useState, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native';
+import React, {useState, useRef} from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Animated,
+  Dimensions,
+} from 'react-native';
 
 import Messages from '../messages/Messages';
 import Home from '../home/Home';
 import Profile from '../profile/Profile';
 import Icon from '../../components/customIcon/CustomIcon';
-import { colors } from '../../assets/data/colors';
-import { insect } from '../../assets/data/TypeScript';
+import {colors} from '../../assets/data/colors';
+import {insect} from '../../assets/data/TypeScript';
 import Feeds from '../feeds/Feeds';
 
+const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('screen');
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('screen');
-
-const CustomBottomNavigation = ({navigation,route}:any) => {
+const CustomBottomNavigation = ({navigation, route}: any) => {
   const id = route?.params?.id ?? null;
-  const [activeTab, setActiveTab] = useState(id?id:0);
+  console.log("id: ", id);
+  
+  const [activeTab, setActiveTab] = useState(id ? id : 0);
   const [startX, setStartX] = useState(0);
-  const tabNames = ['chat-processing-outline', 'home-circle-outline', 'account-circle-outline'];
+  const tabNames = [
+    'chat-processing-outline',
+    'home-circle-outline',
+    'account-circle-outline',
+  ];
   const translateX = useRef(new Animated.Value(0)).current;
-  const handleTouchStart = (e:any) => {
+  const handleTouchStart = (e: any) => {
     setStartX(e.nativeEvent.pageX);
   };
-  const handleTouchEnd = (e:any) => {
+  const handleTouchEnd = (e: any) => {
     const endX = e.nativeEvent.pageX;
     const distance = startX - endX;
 
     if (distance > 50 && activeTab < tabNames.length - 1) {
-      setActiveTab((prev) => Math.min(tabNames.length - 1, prev + 1));
+      setActiveTab((prev:any) => Math.min(tabNames.length - 1, prev + 1));
     } else if (distance < -50 && activeTab > 0) {
-      setActiveTab((prev) => Math.max(0, prev - 1));
+      setActiveTab((prev:any) => Math.max(0, prev - 1));
     }
   };
   Animated.timing(translateX, {
@@ -38,7 +50,7 @@ const CustomBottomNavigation = ({navigation,route}:any) => {
   }).start();
 
   console.log(activeTab);
-  
+
   return (
     <View style={styles.container}>
       <View
@@ -46,42 +58,59 @@ const CustomBottomNavigation = ({navigation,route}:any) => {
         onStartShouldSetResponder={() => true}
         onResponderGrant={handleTouchStart}
         onResponderMove={() => {}}
-        onResponderRelease={handleTouchEnd}
-      >
-        <Animated.View
-          style={[
-            styles.slider,
-            { transform: [{ translateX }] },
-          ]}
-        >
+        onResponderRelease={handleTouchEnd}>
+        <Animated.View style={[styles.slider, {transform: [{translateX}]}]}>
           {tabNames.map((tab, index) => (
             <View key={index} style={styles.tabPage}>
-                {
-                    index===0?<Feeds/>: index===1?<Home/>:<Messages/>
-                }
-                
+              {index === 0 ? <Feeds /> : index === 1 ? <Home /> : <Messages />}
             </View>
           ))}
         </Animated.View>
       </View>
       <View style={styles.bottomNav}>
-        <TouchableOpacity style={{borderWidth:1, borderColor:activeTab===2? colors.black:colors.white, borderRadius:50, padding:5,
-          alignItems: "center",
-          justifyContent: "center",
-        }}  onPress={()=>navigation.replace('Home',{id:0})}>
-          <Icon name={activeTab===0?"play":"play-outline"} size={18} iconFamily='ionic' color={activeTab===2? colors.black:"white"} />
+        <TouchableOpacity
+          style={{
+            borderWidth: 1,
+            borderColor: activeTab === 2 ? colors.black : colors.white,
+            borderRadius: 50,
+            padding: 5,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          onPress={() => navigation.replace('Home', {id: 0})}>
+          <Icon
+            name={activeTab === 0 ? 'play' : 'play-outline'}
+            size={18}
+            iconFamily="ionic"
+            color={activeTab === 2 ? colors.black : 'white'}
+          />
         </TouchableOpacity>
-        <TouchableOpacity onPress={activeTab===1?()=>navigation.navigate('CapturedData'):
-        ()=>navigation.replace('Home',{id:1})
-        }>
-          <View style={[styles.cameraButton,{borderColor:activeTab===2? colors.black:colors.white}]} />
+        <TouchableOpacity
+          onPress={
+            activeTab === 1
+              ? () => navigation.navigate('CapturedData')
+              : () => navigation.replace('Home', {id: 1})
+          }>
+          <View
+            style={[
+              styles.cameraButton,
+              {
+                borderWidth: activeTab === 1 ? 5: 2,
+                borderColor: activeTab === 2 ? colors.black : colors.white,
+              },
+            ]}
+          />
         </TouchableOpacity>
         {/* <View style={{width:28}}></View> */}
-        <TouchableOpacity onPress={()=>navigation.replace('Home',{id:2})}>
-          <Icon name={activeTab===2? "chat-bubble":"chat-bubble-outline"} size={28} iconFamily='material' color= {activeTab===2? colors.black:"white"} />
+        <TouchableOpacity onPress={() => navigation.replace('Home', {id: 2})}>
+          <Icon
+            name={activeTab === 2 ? 'chat-bubble' : 'chat-bubble-outline'}
+            size={28}
+            iconFamily="material"
+            color={activeTab === 2 ? colors.black : 'white'}
+          />
         </TouchableOpacity>
       </View>
-
     </View>
   );
 };
@@ -101,7 +130,7 @@ const styles = StyleSheet.create({
   },
   tabPage: {
     width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT-40, // Adjust the height to fill available space excluding the bottom nav
+    height: SCREEN_HEIGHT - 40, // Adjust the height to fill available space excluding the bottom nav
     justifyContent: 'center',
     alignItems: 'center',
     // backgroundColor: 'red', // You can change the background color here
@@ -142,11 +171,9 @@ const styles = StyleSheet.create({
   cameraButton: {
     width: 64,
     height: 64,
-    borderWidth:2,
     borderRadius: 32,
     borderColor: 'white',
   },
-
 });
 
 export default CustomBottomNavigation;

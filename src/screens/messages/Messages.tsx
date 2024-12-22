@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,10 @@ import Icon from '../../components/customIcon/CustomIcon';
 import {useNavigation} from '@react-navigation/native';
 
 
+import auth from '@react-native-firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { useSelector } from 'react-redux';
 const mockData = [
   {id: 1, name: 'Sara', status: 'New Footage', time: '11:40 pm', icon: '🔥'},
   {id: 2, name: 'Muhammad', status: 'New chat', time: '9:30 am', icon: '🔥'},
@@ -22,6 +26,13 @@ const mockData = [
 ];
 
 const Messages = () => {
+  const [showMenu, setShowMenu]:any = useState(false);
+  const p = useSelector((state: any) => state.profile);
+  const profilex = p.data;
+  const friendRequestsLength = profilex.friendRequests
+  ? Object.keys(profilex.friendRequests).length
+  : 0;
+  
   const navigation: any = useNavigation();
   const renderChatItem = ({item}: any) => (
     <TouchableOpacity
@@ -72,8 +83,11 @@ const Messages = () => {
 
         <TouchableOpacity onPress={()=>navigation.navigate('Profile')}>
           <View style={styles.avatar} >
-            
-          <Icon name="person" size={24} iconFamily='ionic' color="white" />
+          {
+              profilex?.profilePic ? <Image style={{
+                width: 40,
+                height: 40,borderRadius:20}} source={{uri:profilex?.profilePic}}/> :<Icon name="person" size={24} iconFamily='ionic' color="white" />
+            }
           </View>
         </TouchableOpacity>
           <Text style={styles.title}>Chat</Text>
@@ -88,13 +102,30 @@ const Messages = () => {
                 gap: 10,
                 alignItems: 'center',
               }}>
-              <TouchableOpacity>
+              <TouchableOpacity
+               onPress={()=>navigation.navigate('AddFriendsScreen')}
+              style={{
+                flexDirection:'row',
+                justifyContent:'space-between',
+                alignItems:'center',
+                gap:5,
+                marginLeft:10,
+              }}>
                 <Icon
                   name="adduser"
                   iconFamily="antDesign"
                   size={24}
                   color={colors.black}
                 />
+               {friendRequestsLength!==0 && <View style={{height:15,width:15, backgroundColor:colors.red, borderRadius:40,
+                  justifyContent:'center',
+                  alignItems:'center',
+                  marginLeft:-10,
+                  marginTop:-10
+                }}>
+
+                <Text style={{color:colors.white, fontSize:8}}>{Object.keys(profilex.friendRequests).length}</Text>
+                </View>}
               </TouchableOpacity>
               <TouchableOpacity>
                 <Icon
@@ -104,7 +135,9 @@ const Messages = () => {
                   color={colors.black}
                 />
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity
+              onPress={()=>setShowMenu(!showMenu)}
+              >
                 <Icon
                   name="dots-three-vertical"
                   iconFamily="entypo"
@@ -115,7 +148,7 @@ const Messages = () => {
             </View>
           </View>
         </View>
-
+       
         {/* Notifications */}
         <TouchableOpacity disabled style={styles.notificationBar}>
           <Text style={styles.notificationText}>
@@ -144,6 +177,66 @@ const Messages = () => {
           <Text style={styles.sectionTitle}>Friends</Text>
         </TouchableOpacity>
       </View>
+       {/* Show Menu */}
+       {showMenu&& <TouchableOpacity
+         onPress={async () => {
+          const jsonData = await AsyncStorage.getItem('userPreferences');
+          if (jsonData !== null) {
+            const data: any = JSON.parse(jsonData);
+            console.log('Loaded data:', data);
+            if (data.type === 'google') {
+              const dataToSave = {
+                remember: false,
+                type: '',
+              };
+              await AsyncStorage.setItem(
+                'userPreferences',
+                JSON.stringify(dataToSave),
+              );
+              await GoogleSignin.revokeAccess();
+              await GoogleSignin.signOut().then(async () => {
+                // dispatch(removeChatFriend('chat'));
+                // dispatch(removeFriend('chat'));
+                // dispatch(removeProfile(''));
+                await auth().signOut();
+                navigation.reset({
+                  index: 0,
+                  routes: [{name: 'LoginScreen'}],
+                });
+              });
+              console.log('Google User signed out');
+            } else if (data.type === 'email') {
+              const dataToSave = {
+                remember: false,
+                type: '',
+              };
+              await AsyncStorage.setItem(
+                'userPreferences',
+                JSON.stringify(dataToSave),
+              );
+              auth()
+                .signOut()
+                .then(() => {
+                  // dispatch(removeChatFriend('chat'));
+                  // dispatch(removeFriend('chat'));
+                  // dispatch(removeProfile(''));
+                  console.log('Email User signed out!');
+                  navigation.reset({
+                    index: 0,
+                    routes: [{name: 'LoginScreen'}],
+                  });
+                });
+            } else {
+              console.log('Sign In Provider is invalid: ', data.type);
+            }
+          }
+          console.log('pressed');
+        }}
+      
+       style={{backgroundColor:'red', padding:10, position:'absolute', right:20, top:54, borderRadius:12}}>
+          <Text style={{color: colors.white}}>Logout</Text>
+
+        </TouchableOpacity>}
     </SafeAreaView>
   );
 };
