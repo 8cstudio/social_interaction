@@ -77,8 +77,9 @@ android {
 
     namespace "com.social_interaction"
     defaultConfig {
+        missingDimensionStrategy 'react-native-camera', 'general' // <--- insert this line
         applicationId "com.social_interaction"
-        minSdkVersion 23//rootProject.ext.minSdkVersion
+        minSdkVersion 24//rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"

@@ -1,6 +1,15 @@
 import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
+
+  camera: {
+    position:'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right:0,
+    flex: 1,
+  },
   container: {
     flex: 1,
     width: '100%',
@@ -10,7 +19,7 @@ export const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
