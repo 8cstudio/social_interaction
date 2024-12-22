@@ -23,6 +23,8 @@ import AccountSettings from '../screens/settings/AccountSettings';
 import Messages from '../screens/messages/Messages';
 import CustomBottomNavigation from '../screens/bottomTabs/BottomTabs';
 import ProfileSetup from '../screens/profile/ProfileSetup';
+import CapturedDataEdit from '../screens/captureData/CapturedDataEdit';
+import EditContent from '../screens/scanOptions/EditContent';
 
 const Stack = createStackNavigator();
 const MainNavigation = () => {
@@ -52,6 +54,9 @@ const MainNavigation = () => {
       <Stack.Screen name="NotificationsSettings" component={NotificationsSettings} />
       <Stack.Screen name="AccountSettings" component={AccountSettings} />
       <Stack.Screen name="Messages" component={Messages} />
+      <Stack.Screen name="CapturedDataEdit" component={CapturedDataEdit} />
+      <Stack.Screen name="EditContent" component={EditContent} />
+
     </Stack.Navigator>
   );
 };

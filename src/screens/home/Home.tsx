@@ -1,27 +1,56 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   View,
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
   Text,
+  Image,
 } from 'react-native';
 import Icon1 from '../../components/customIcon/CustomIcon';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { styles } from './styles';
 import { useNavigation } from '@react-navigation/native';
+import { RNCamera } from 'react-native-camera';
+import DocumentPicker from 'react-native-document-picker';
 
 import { colors } from '../../assets/data/colors';
 
 
-export default function Home() {
+export default function Home({isRecording, setIsRecording, cameraRef}: any) {
   
   const navigation :any= useNavigation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  async function handlePicVideo() {
+    
+    try {
+      const res: any = await DocumentPicker.pick({
+        type: [DocumentPicker.types.video], // Allow all file types
+        copyTo: 'cachesDirectory',
+      });
+      
+      const f = res[0].fileCopyUri;
+      console.log("res", res[0].fileCopyUri);
+      
+      navigation.navigate('CapturedDataEdit', {uri: res[0].fileCopyUri});
+      
+      return;
+    } catch (err) {
+      console.error('Error picking file:', err);
 
+    } finally {
+      console.log('called');
+    }
+  }
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
+      <RNCamera
+        ref={cameraRef}
+        style={styles.camera}
+        type={RNCamera.Constants.Type.back}
+        captureAudio={true}
+      />
       <View style={styles.header}>
 
         <View style={{
@@ -37,14 +66,17 @@ export default function Home() {
         <Icon1 name="search1" iconFamily='antDesign' size={24} color="white" />
         </TouchableOpacity>
         </View>
-
-
+        <View>
         <TouchableOpacity  onPress={()=>navigation.navigate('Profile')}>
           <View style={styles.avatar} >
             
           <Icon1 name="person" size={24} iconFamily='ionic' color="white" />
           </View>
         </TouchableOpacity>
+        <TouchableOpacity onPress={handlePicVideo}>
+        <Image style={{height: 40, width: 40, resizeMode:'cover'}} source={require("../../assets/icons/gallery.png")} />
+        </TouchableOpacity>
+        </View>
       </View>
 
       {/* FAB Menu */}
@@ -72,7 +104,6 @@ export default function Home() {
           <Icon name={isMenuOpen ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={24} color="white" />
         </TouchableOpacity>
       </View>
-
     </SafeAreaView>
   );
 }

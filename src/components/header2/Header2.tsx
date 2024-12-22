@@ -9,6 +9,8 @@ import {useNavigation} from '@react-navigation/native';
 // import {elevation2, fontSize, uid} from '../../assets/data/TypeScript';
 import CustomTextInput from '../textInput/CustomTextInput';
 import { elevation3, fontSize } from '../../assets/data/TypeScript';
+import { SvgObjPath1 } from '../svgs/SVG';
+import { svgobj1 } from '../../assets/data/svgobj';
 // import {svgobj} from '../../assets/data/svg1';
 
 const Header2 = ({
@@ -163,7 +165,7 @@ const Header2 = ({
             backgroundColor: colors.blueText,
             borderRadius: 18,
           }}>
-          {/* <SvgObjPath1 icon={svgobj1.tick} stroke={colors.white} /> */}
+          <SvgObjPath1 icon={svgobj1.tick} stroke={colors.white} />
         </TouchableOpacity>
       ) : person ? (
         <TouchableOpacity
