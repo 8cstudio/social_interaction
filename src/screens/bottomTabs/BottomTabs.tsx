@@ -16,6 +16,7 @@ import {colors} from '../../assets/data/colors';
 import {insect} from '../../assets/data/TypeScript';
 import Feeds from '../feeds/Feeds';
 
+
 import {RNCamera} from 'react-native-camera';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('screen');
@@ -133,6 +134,7 @@ const CustomBottomNavigation = ({navigation, route}: any) => {
           />
         </TouchableOpacity>
         <TouchableOpacity
+
         onPressIn={()=>{activeTab === 1&&handleRecordStart()}}
         onPressOut={()=>{activeTab === 1&& handleRecordStop()}}
           onPress={() => {

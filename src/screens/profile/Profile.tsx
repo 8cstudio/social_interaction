@@ -14,8 +14,12 @@ import ProfileHeader from './ProfileHeader';
 import CustomButton from '../../components/customButton/CustomButton';
 import {styles} from './styles';
 import {categoriesTabs, feedsFilter} from '../../assets/data/arrays';
+import { useSelector } from 'react-redux';
 
 const Profile = ({navigation}: any) => {
+  
+  const p = useSelector((state: any) => state.profile);
+  const profilex = p.data;
   const [tab, setTab] = useState(0);
 
   const [tabLabel, setTabLabel] = useState('All');
@@ -28,11 +32,11 @@ const Profile = ({navigation}: any) => {
   return (
     <SafeAreaView style={{flex: 1, padding: 0}}>
       <View style={{paddingHorizontal: 20, paddingTop:20}}>
-        <ProfileHeader />
+        <ProfileHeader data={profilex}/>
         {/*************************** Profile View ****************************/}
         <View
           style={{flexDirection: 'row', alignItems: 'center', marginTop: 20}}>
-          <Image
+         { profilex.profilePic?  <Image
             style={{
               height: fontSize(100),
               width: fontSize(100),
@@ -40,8 +44,8 @@ const Profile = ({navigation}: any) => {
               borderWidth: 3,
               borderColor: colors.gray,
             }}
-            source={require('../../assets/images/profile.png')}
-          />
+            source={{uri: profilex?.profilePic}}
+          />:<Icon name="person-circle-outline" size={fontSize(100)} iconFamily='ionic' color={colors.grey}/>}
           <View
             style={{
               flexDirection: 'row',
@@ -66,20 +70,21 @@ const Profile = ({navigation}: any) => {
             </View>
           </View>
         </View>
-        <Text style={{color: colors.black, fontSize:16, fontWeight:'bold'}}>Ashley</Text>
-        <Text style={{color: colors.grey, }}>@ashley_666</Text>
-        <Text style={{color: colors.black}}>Description/bio here like j  fk fykgfluykhkh  uhkkjh iuhuklu uh hsw swjsiw ojwiznwoi </Text>
+        <Text style={{color: colors.black, fontSize:16, fontWeight:'bold'}}>{profilex?.name?profilex?.name:'No name'}</Text>
+        <Text style={{color: colors.grey, }}>{profilex?.userName? '@'+profilex?.userName:'Set your user name'}</Text>
+        <Text style={{color: colors.black}}>{profilex.description?profilex.description:'no description added yet'}</Text>
         <View style={{flexDirection:'row', alignItems:'center'}}>
 
         <Icon name='location' iconFamily='EvilIcons' color={colors.grey} size={20}/>
         <Text style={{color: colors.grey, marginLeft:5, marginTop:5,
-        }}>Makkah, Saudi Arabia</Text>
+        }}>{profilex.location?profilex.location: 'Location'}</Text>
         </View>
         {/********************* Buttons View **********************/}
         <View style={styles.btnsView}>
           <CustomButton
             height={35}
             flex={1.1}
+            onPress={()=> navigation.navigate('ProfileSetup')}
             title={'Edit Profile'}
             fontSize={fontSize(11)}
             width={'35%'}
@@ -88,13 +93,14 @@ const Profile = ({navigation}: any) => {
             borderRadius={50}
           />
           <CustomButton
+          disabled
             height={35}
             flex={1.1}
             title={'Share Profile'}
             fontSize={fontSize(11)}
             width={'35%'}
             btnTextColor={colors.white}
-            btnColor={colors.black}
+            btnColor={colors.grey}
             borderRadius={50}
           />
         </View>

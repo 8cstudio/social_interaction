@@ -2,7 +2,8 @@ import {Alert} from 'react-native';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-
+import { useDispatch } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 //Sign in with google and stored the profile data in firebase firestore
 export const signInWithGoogle = async (setISLoading: any, navigation: any) => {
     setISLoading(true);
@@ -27,7 +28,6 @@ export const signInWithGoogle = async (setISLoading: any, navigation: any) => {
                   name: returnedData?.userName,
                   email: auth().currentUser?.email,
                   profilePic: returnedData.profilePic,
-                  maxDistance: 5,
                 },
                 {merge: true},
               );
@@ -66,16 +66,16 @@ export const signInWithGoogle = async (setISLoading: any, navigation: any) => {
     }
   }
   const saveData = async (type: any) => {
-    // try {
-    //   const dataToSave = {
-    //     remember: true,
-    //     type: type,
-    //   };
-    //   await AsyncStorage.setItem('userPreferences', JSON.stringify(dataToSave));
-    //   console.log('Success', 'Data saved successfully: ', dataToSave);
-    // } catch (error) {
-    //   Alert.alert('Error', 'Failed to save data');
-    // }
+    try {
+      const dataToSave = {
+        remember: true,
+        type: type,
+      };
+      await AsyncStorage.setItem('userPreferences', JSON.stringify(dataToSave));
+      console.log('Success', 'Data saved successfully: ', dataToSave);
+    } catch (error) {
+      Alert.alert('Error', 'Failed to save data');
+    }
   };
 
   
@@ -92,9 +92,10 @@ export const handleLogin = async (
     auth()
       .signInWithEmailAndPassword(formData.email, formData.passworda)
       .then(async (userData: any) => {
+        const userId = auth().currentUser?.uid;
         try {
           console.log(userData.user.emailVerified);
-          if (userData.user.emailVerified) {
+          // if (userData.user.emailVerified) {
             await saveData('email');
   
             navigation.reset({
@@ -105,19 +106,19 @@ export const handleLogin = async (
             //     index: 0,
             //     routes: [{name: 'OnBoarding'}],
             //   });
-          } else {
-            setIsAlertVisible(true);
-            setResend(true);
-            setAlertData({
-              title: 'Alert!',
-              message: 'Please Verify your email',
-              onPress: () => {
-                auth().signOut();
-                setIsAlertVisible(false);
-              },
-            });
-            console.log('No user document found');
-          }
+          // } else {
+          //   setIsAlertVisible(true);
+          //   setResend(true);
+          //   setAlertData({
+          //     title: 'Alert!',
+          //     message: 'Please Verify your email',
+          //     onPress: () => {
+          //       auth().signOut();
+          //       setIsAlertVisible(false);
+          //     },
+          //   });
+          //   console.log('No user document found');
+          // }
         } catch (error) {
           setIsAlertVisible(true);
           setAlertData({
@@ -176,7 +177,7 @@ export const handleLogin = async (
                   .set(user)
                   .then(() => {
                     if (auth().currentUser) {
-                      auth().currentUser?.sendEmailVerification();
+                      // auth().currentUser?.sendEmailVerification();
                       console.log('current user: ', auth().currentUser?.email);
                       setIsAlertVisible(true);
                       setAlertData({
@@ -184,10 +185,9 @@ export const handleLogin = async (
                         message: "'Account created successfully'",
                         onPress: () => {
                           navigation.reset({
-                            index: 1,
+                            index: 0,
                             routes: [
-                              {name: 'LoginScreen'},
-                              {name: 'Profile'},
+                              {name: 'Home'},
                             ],
                           });
                         },

@@ -314,10 +314,10 @@ const LoginScreen = ({navigation}: any) => {
           </TouchableOpacity>
           <View style={[styles.checkBox, {marginBottom: 10}]}>
             {/* <CheckBox check={check} onCheck={setCheck} index={1} /> */}
-            <Text
+            {/* <Text
               style={{fontSize: 15, fontWeight: '500', color: colors.black}}>
               Remember me
-            </Text>
+            </Text> */}
           </View>
           <View style={{width: '100%'}}>
             <CustomButton

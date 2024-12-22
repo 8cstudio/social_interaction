@@ -5,8 +5,10 @@ import { colors } from '../../assets/data/colors'
 import { fontSize } from '../../assets/data/TypeScript'
 import { useNavigation } from '@react-navigation/native'
 
-const ProfileHeader = () => {
+const ProfileHeader = (data:any) => {
     const navigation:any = useNavigation();
+    console.log(": ------------ ",data);
+    
   return (
     <View
     style={{
@@ -52,7 +54,7 @@ const ProfileHeader = () => {
         />
       </TouchableOpacity>
       <TouchableOpacity
-      onPress={()=>navigation.navigate('SettingsScreen')}
+      onPress={()=>navigation.navigate('SettingsScreen', {profilex:data})}
       >
         <Icon
           name="setting"
