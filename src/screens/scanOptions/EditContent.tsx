@@ -22,6 +22,7 @@ import storage from '@react-native-firebase/storage';
 import { feedsData, uploadMediaToFirestore } from '../../components/functions/GlobalFunctions';
 import Percentage from '../../components/modals/Percentage';
 import { fontsInter } from '../../assets/fonts/Fonts';
+import { useSelector } from 'react-redux';
 // import {useSelector} from 'react-redux';
 
 const category = [{label: 'Fitness'}, {label: 'Love'}, {label: 'Sports'}];
@@ -29,8 +30,10 @@ const EditContent = ({navigation, route}: any) => {
   const uid = auth().currentUser?.uid
   const data = route?.params ?? null;
   const scan = route?.params.scan ?? null;
-  const p = {data:""}//useSelector(state => state.profile);
+  const p = useSelector((state: any) => state?.profile);
   const profile = p.data;
+  console.log(profile);
+  
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCat, setSelectedCat] = useState('');
   const [pickerVisibleCat, setPickerVisibleCat] = useState(false);
@@ -50,7 +53,8 @@ const EditContent = ({navigation, route}: any) => {
       const data1 = feedsData(
         thmnail,
         uri,
-        videoTitle
+        videoTitle,
+        profile
       );
       firestore()
         .collection('feeds')
@@ -79,6 +83,7 @@ const EditContent = ({navigation, route}: any) => {
                 
                 setPercentageModal(false);
                 setProgress(0);
+                navigation.replace("Profile")
                 console.log('Document updated successfully!');
               })
               .catch(error => {
@@ -103,6 +108,7 @@ const EditContent = ({navigation, route}: any) => {
                 
                 setPercentageModal(false);
                 setProgress(0);
+                navigation.replace("Profile")
                 console.log('Document created successfully!');
               })
               .catch(error => {
