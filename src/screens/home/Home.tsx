@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+
+import React, { useRef, useState } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -13,17 +14,18 @@ import { styles } from './styles';
 import { useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+import { RNCamera } from 'react-native-camera';
+import DocumentPicker from 'react-native-document-picker';
 import { colors } from '../../assets/data/colors';
 import { useDispatch, useSelector } from 'react-redux';
 import { addData } from '../../redux/ProfileSlice';
 import Icon from '../../components/customIcon/CustomIcon';
 
 
-export default function Home() {
+export default function Home({isRecording, setIsRecording, cameraRef}: any) {
   
   const navigation :any= useNavigation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
   const p = useSelector((state: any) => state.profile);
   const profilex = p.data;
   console.log(profilex);
@@ -111,9 +113,36 @@ export default function Home() {
   //       return () => unsubscribe();
   //     });
   // }
+  async function handlePicVideo() {
+    
+    try {
+      const res: any = await DocumentPicker.pick({
+        type: [DocumentPicker.types.video], // Allow all file types
+        copyTo: 'cachesDirectory',
+      });
+      
+      const f = res[0].fileCopyUri;
+      console.log("res", res[0].fileCopyUri);
+      
+      navigation.navigate('CapturedDataEdit', {uri: res[0].fileCopyUri});
+      
+      return;
+    } catch (err) {
+      console.error('Error picking file:', err);
+
+    } finally {
+      console.log('called');
+    }
+  }
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
+      <RNCamera
+        ref={cameraRef}
+        style={styles.camera}
+        type={RNCamera.Constants.Type.back}
+        captureAudio={true}
+      />
       <View style={styles.header}>
         <View style={{
           flexDirection: 'row',
@@ -149,6 +178,7 @@ export default function Home() {
         <Icon1 name="search1" iconFamily='antDesign' size={24} color="white" />
         </TouchableOpacity>
         </View>
+        <View>
         <TouchableOpacity  onPress={()=>navigation.navigate('Profile')}>
           <View style={styles.avatar} >
             {
@@ -159,6 +189,10 @@ export default function Home() {
           
           </View>
         </TouchableOpacity>
+        <TouchableOpacity onPress={handlePicVideo}>
+        <Image style={{height: 40, width: 40, resizeMode:'cover'}} source={require("../../assets/icons/gallery.png")} />
+        </TouchableOpacity>
+        </View>
       </View>
       {/* FAB Menu */}
       <View style={[styles.fabContainer, isMenuOpen && styles.menuOpen]}>
@@ -185,7 +219,6 @@ export default function Home() {
           <Icon iconFamily={'material'} name={isMenuOpen ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={24} color="white" />
         </TouchableOpacity>
       </View>
-
     </SafeAreaView>
   );
 }
