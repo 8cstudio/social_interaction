@@ -3,6 +3,7 @@ import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import auth from '@react-native-firebase/auth';
 import moment from 'moment'
+import { useSelector } from "react-redux";
 
 export const {width, height} = Dimensions.get("window")
 export function fontSize(font: number) {
@@ -95,7 +96,8 @@ export const elevation2 = {
 export function feedsData(
   thumbnail: any,
   uri: any,
-  tittle: any
+  tittle: any,
+  profile: any
 ) {
   return {
     comments: [],
@@ -104,10 +106,11 @@ export function feedsData(
     createdAt: new Date(),
     uri: uri,
     views: 0,
-    tittle: tittle
+    tittle: tittle,
+    name: profile?.name ?? '',
+    pic: profile?.profilePic ?? ''
   };
 }
-export const profile: any = [{}]
 
 
 moment.relativeTimeThreshold('s', 60)

@@ -1,5 +1,5 @@
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -23,7 +23,6 @@ import Icon from '../../components/customIcon/CustomIcon';
 
 
 export default function Home({isRecording, setIsRecording, cameraRef}: any) {
-  
   const navigation :any= useNavigation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const p = useSelector((state: any) => state.profile);
@@ -32,29 +31,7 @@ export default function Home({isRecording, setIsRecording, cameraRef}: any) {
   const friendRequestsLength = profilex.friendRequests
   ? Object.keys(profilex.friendRequests).length
   : 0;
-  const dispatch = useDispatch();
 
-  useEffect(() => {
-    const userDocRef = firestore()
-      .collection('users')
-      .doc(auth().currentUser?.uid);
-    const unsubscribe = userDocRef.onSnapshot(
-      doc => {
-        if (doc.exists) {
-          const userData: any = doc.data();
-          // const name = getCityName()
-          dispatch(addData(userData));
-          // getFriends(userData.friends);
-        } else {
-          Alert.alert('Empty', 'User Profile data is Empty');
-        }
-      },
-      error => {
-        console.error('Error listening to user document:', error);
-      },
-    );
-    return () => unsubscribe();
-  }, []);
   // async function getFriends(friends: any) {
   //   firestore()
   //     .collection('users')
