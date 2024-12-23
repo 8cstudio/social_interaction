@@ -175,8 +175,8 @@ const ProfileSetup = ({navigation, route}: any) => {
 
             },
           });
+          console.log('User name uploaded successfully');
         });
-      console.log('User name uploaded successfully');
     } catch (error) {
       console.log('Error uploading user data:', error);
     } finally {
