@@ -19,3 +19,33 @@ export function fontSize(font: number) {
     elevation: 9,
   };
   export  const insect = useSafeAreaInsets();
+
+  export const formatTime = (timestamp: any) => {
+    if (!timestamp?.seconds) {
+      const date = new Date();
+      const hours = date.getHours();
+      const minutes = date.getMinutes();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      const formattedHours = hours % 12 || 12; // Convert to 12-hour format
+  
+      return `${formattedHours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+    }
+    const date = new Date(timestamp.seconds * 1000); // Convert seconds to milliseconds
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12; // Convert to 12-hour format
+  
+    return `${formattedHours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+  };
+  export function formatSecondsToMinutes(seconds: any) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+  
+    // Add leading zeros if necessary
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+    const formattedSeconds =
+      remainingSeconds < 10 ? `0${remainingSeconds}` : `${remainingSeconds}`;
+  
+    return `${formattedMinutes}:${formattedSeconds}`;
+  }

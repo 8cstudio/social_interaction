@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -17,6 +17,7 @@ import auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { useSelector } from 'react-redux';
+import firestore from '@react-native-firebase/firestore';
 const mockData = [
   {id: 1, name: 'Sara', status: 'New Footage', time: '11:40 pm', icon: '🔥'},
   {id: 2, name: 'Muhammad', status: 'New chat', time: '9:30 am', icon: '🔥'},
@@ -27,44 +28,116 @@ const mockData = [
 
 const Messages = () => {
   const [showMenu, setShowMenu]:any = useState(false);
+  const [friends, setFriends]:any = useState([]);
   const p = useSelector((state: any) => state.profile);
   const profilex = p.data;
+  const friendsCount = profilex?.friends? Object.keys(profilex?.friends)?.length:0;
+  // console.log(friends);
+  useEffect(() => {
+    if(profilex?.friends){
+      
+      fetchUsersByIds(Object.keys(profilex?.friends))
+    }
+  }, [])
+  
+  const fetchUsersByIds = async (userIds:any) => {
+    try {
+      const usersDetails = [];
+      for (const userId of userIds) {
+        const userDoc = await firestore().collection('users').doc(userId).get();
+        if (userDoc.exists) {
+          usersDetails.push({
+            id: userDoc.id,
+            ...userDoc.data(),
+          });
+
+        } else {
+          console.log(`User with ID ${userId} does not exist.`);
+        }
+      }
+  
+      console.log('Users Details:', usersDetails); // Array of user details
+      setFriends(usersDetails);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      return [];
+    }
+  };
+  // console.log(friendsCount);
   const friendRequestsLength = profilex.friendRequests
   ? Object.keys(profilex.friendRequests).length
   : 0;
-  
   const navigation: any = useNavigation();
-  const renderChatItem = ({item}: any) => (
-    <TouchableOpacity
-      onPress={() => navigation.navigate('ChatScreen')}
+  // const renderChatItem = ({item}: any) => (
+  //   <TouchableOpacity
+  //     onPress={() => navigation.navigate('ChatScreen')}
+  //     style={styles.chatItem}>
+  //     <Image
+  //       source={{uri: 'https://via.placeholder.com/50'}} // Replace with actual profile image URLs
+  //       style={styles.profileImage}
+  //     />
+  //     <View style={{flex: 1, marginHorizontal: 10}}>
+  //       <Text style={styles.chatName}>
+  //         {item.name} {item.icon}
+  //       </Text>
+  //       <Text
+  //         style={[
+  //           styles.chatStatus,
+  //           {
+  //             color:
+  //               item.status === 'New Footage' || item.status === 'New chat'
+  //                 ? colors.pink
+  //                 : item.status === 'Opened'
+  //                 ? colors.green
+  //                 : item.status === 'Delivered'
+  //                 ? colors.blueText
+  //                 : colors.lightBlue,
+  //           },
+  //         ]}>
+  //         {item.status}
+  //       </Text>
+  //     </View>
+  //     <Text style={styles.chatTime}>{item.time}</Text>
+  //   </TouchableOpacity>
+  // );
+  const renderFriends = ({item}: any) => (
+    <View
+      // onPress={() => navigation.navigate('ChatScreen')}
       style={styles.chatItem}>
+        <TouchableOpacity
+        onPress={()=>navigation.navigate('Profile',{id:item.id})}
+        >
+
       <Image
-        source={{uri: 'https://via.placeholder.com/50'}} // Replace with actual profile image URLs
+        source={{uri:item.profilePic?item.profilePic: 'https://via.placeholder.com/50'}} // Replace with actual profile image URLs
         style={styles.profileImage}
       />
+        </TouchableOpacity>
       <View style={{flex: 1, marginHorizontal: 10}}>
         <Text style={styles.chatName}>
-          {item.name} {item.icon}
+          {item.name} 
+          {/* {item.icon} */}
         </Text>
         <Text
           style={[
             styles.chatStatus,
             {
               color:
-                item.status === 'New Footage' || item.status === 'New chat'
-                  ? colors.pink
-                  : item.status === 'Opened'
-                  ? colors.green
-                  : item.status === 'Delivered'
-                  ? colors.blueText
-                  : colors.lightBlue,
+                // item.status === 'New Footage' || item.status === 'New chat'
+                //   ? colors.pink
+                //   : item.status === 'Opened'
+                //   ? colors.green
+                //   : item.status === 'Delivered'
+                //   ? colors.blueText
+                //   :
+                   colors.lightBlue,
             },
           ]}>
-          {item.status}
+          {item.status?item.status:'Opened'}
         </Text>
       </View>
-      <Text style={styles.chatTime}>{item.time}</Text>
-    </TouchableOpacity>
+      <Text style={styles.chatTime}>{item.time?item.time:'09:43 pm'}</Text>
+    </View>
   );
 
   return (
@@ -161,21 +234,28 @@ const Messages = () => {
           <Text style={styles.sectionTitle}>Live Chat</Text>
         </TouchableOpacity>
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Chat (2)</Text>
+          <Text style={styles.sectionTitle}>Chat</Text>
         </View>
         {/* Chat List */}
-        <View style={{}}>
+        {/* <View style={{}}>
           <FlatList
             data={mockData}
             renderItem={renderChatItem}
             keyExtractor={item => item.id.toString()}
           />
-        </View>
+        </View> */}
 
         {/* Friends Section */}
         <TouchableOpacity disabled style={styles.section}>
-          <Text style={styles.sectionTitle}>Friends</Text>
+          <Text style={styles.sectionTitle}>Friends {`(${friendsCount})`}</Text>
         </TouchableOpacity>
+        <View style={{}}>
+          <FlatList
+            data={friends}
+            renderItem={renderFriends}
+            keyExtractor={item => item.id.toString()}
+          />
+        </View>
       </View>
        {/* Show Menu */}
        {showMenu&& <TouchableOpacity
