@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Icon from '../../components/customIcon/CustomIcon';
@@ -57,6 +58,8 @@ const fetchUserData = async () => {
   } finally {
   }
 };
+  const [allFeedsCollection, setAllFeedsCollection]: any = useState(null);
+
   const [tabLabel, setTabLabel] = useState('All');
 
   const handleTab = (id: number, label: string) => {
@@ -97,6 +100,27 @@ const fetchUserData = async () => {
       console.error(error);
     }
   }
+  useEffect(() => {
+    getAllFeedsData();
+  }, []);
+  const getAllFeedsData = async () => {
+    try {
+      const feeds = firestore().collection('feeds').doc(auth().currentUser?.uid);
+      const doc = await feeds.get();
+      let allData: any = [];
+      if (!doc.exists) {
+        console.log('No doc found');
+        setAllFeedsCollection([])
+        return;
+      }
+
+      setAllFeedsCollection(doc.data()?.feeds);
+    } catch (error) {
+      console.log('Error fetching feeds:', error);
+      setAllFeedsCollection([])
+    }
+  };
+  console.log(allFeedsCollection);
   return (
     <SafeAreaView style={{flex: 1, padding: 0}}>
       <View style={{paddingHorizontal: 20, paddingTop:20}}>
@@ -222,7 +246,7 @@ const fetchUserData = async () => {
           borderTopLeftRadius: 20,
           flex: 1,
         }}>
-        <FlatList
+        {allFeedsCollection &&allFeedsCollection.length>0?<FlatList
           ListHeaderComponent={
             <>
               <FlatList
@@ -259,10 +283,10 @@ const fetchUserData = async () => {
             </>
           }
           showsVerticalScrollIndicator={false}
-          keyExtractor={(item, index) => item?.id.toString()}
+          keyExtractor={(item, index) => item?.uri.toString()+index}
           nestedScrollEnabled
           numColumns={3}
-          data={feedsFilter}
+          data={allFeedsCollection}
           style={{marginHorizontal: 20}}
           renderItem={({item, index}: any) => (
             <TouchableOpacity
@@ -281,7 +305,7 @@ const fetchUserData = async () => {
               <Image
                 style={styles.videoItem}
                 resizeMode="cover"
-                source={item.thumbnail}
+                source={{uri: item?.thumbnail}}
               />
               <View style={styles.viewsText}>
                 <Icon
@@ -295,12 +319,13 @@ const fetchUserData = async () => {
                     fontSize: 12,
                     // fontFamily: fonts.f500,
                   }}>
-                  {item.views}
+                  {item?.views}
                 </Text>
               </View>
             </TouchableOpacity>
           )}
-        />
+        />:allFeedsCollection === null?<ActivityIndicator size={"large"} color={"black"}/>:
+        <Text style={{fontSize:18, color: colors.black}}>No Data Available</Text>}
       </View>
     </SafeAreaView>
   );
