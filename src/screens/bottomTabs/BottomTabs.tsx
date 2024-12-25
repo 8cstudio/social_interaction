@@ -15,8 +15,6 @@ import Icon from '../../components/customIcon/CustomIcon';
 import {colors} from '../../assets/data/colors';
 import {insect} from '../../assets/data/TypeScript';
 import Feeds from '../feeds/Feeds';
-
-
 import {RNCamera} from 'react-native-camera';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('screen');

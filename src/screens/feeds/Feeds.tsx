@@ -16,6 +16,7 @@ import {
   Platform,
   Keyboard,
   StatusBar,
+  Alert,
 } from 'react-native';
 import {colors} from '../../assets/data/colors';
 import Icon from '../../components/customIcon/CustomIcon';
@@ -38,7 +39,8 @@ import {
 } from './FeedsHandlers';
 import RenderCommentItem from './RenderCommentItem';
 import Share from 'react-native-share';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { addData } from '../../redux/ProfileSlice';
 
 const Feeds = ({navigation}: any) => {
   const images = [
@@ -79,7 +81,33 @@ const Feeds = ({navigation}: any) => {
   ]); // Horizontal index
   const currentRef = useRef(0);
   const horizontalRef = useRef(0);
+  
+  const dispatch = useDispatch();
+  useEffect(() => {
 
+    const userDocRef = firestore()
+      .collection('users')
+      .doc(auth().currentUser?.uid);
+    // Attach a listener for document changes
+    const unsubscribe = userDocRef.onSnapshot(
+      doc => {
+        if (doc.exists) {
+          const userData: any = doc.data();
+          // const name = getCityName()
+          dispatch(addData(userData));
+          // getFriends(userData.friends);
+        } else {
+          Alert.alert('Empty', 'User Profile data is Empty');
+        }
+      },
+      error => {
+        console.error('Error listening to user document:', error);
+      },
+    );
+    // Cleanup the listener on unmount or dependency change
+    return () => unsubscribe();
+  }, []);
+  
   useEffect(() => {
     getAllFeedsData();
   }, []);

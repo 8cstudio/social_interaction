@@ -16,14 +16,48 @@ import CustomButton from '../../components/customButton/CustomButton';
 import {styles} from './styles';
 import {categoriesTabs, feedsFilter} from '../../assets/data/arrays';
 import { useSelector } from 'react-redux';
-import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+import firestore, { serverTimestamp } from '@react-native-firebase/firestore';
 
-const Profile = ({navigation}: any) => {
-  
+const Profile = ({navigation, route}: any) => {
+  const id= route?.params?.id??null;
   const p = useSelector((state: any) => state.profile);
   const profilex = p.data;
+  const friend = profilex?.friends?.hasOwnProperty(route?.params?.id);
+  const sent = profilex?.sentRequests?.hasOwnProperty(route?.params?.id);
+  const recieve = profilex?.friendRequests?.hasOwnProperty(route?.params?.id);
   const [tab, setTab] = useState(0);
+  const myId = auth().currentUser?.uid;
+  const [profile, setProfile] = useState(id===null&&profilex);
+  const myProfile = (id===null) ?true: false;
+  console.log(myProfile);
+  
+  console.log('other id: ',id);
+  console.log('my id: ',myId);
+  // console.log("other user data: ",profile);
+  
+useEffect(() => {
+  if(id!==myId && id!==null){
+    fetchUserData();
+  }
+}, [])
+const fetchUserData = async () => {
+  try {
+    const userDoc = await firestore().collection('users').doc(id).get();
+    
+    if (userDoc.exists) {
+      setProfile({
+        id: userDoc.id,
+        ...userDoc.data(),
+      });
+    } else {
+      console.log('No such document!');
+    }
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+  } finally {
+  }
+};
 
   const [allFeedsCollection, setAllFeedsCollection]: any = useState(null);
   const [tabLabel, setTabLabel] = useState('All');
@@ -33,6 +67,39 @@ const Profile = ({navigation}: any) => {
     setTabLabel(label);
     console.log(label);
   };
+  async function handleAdd() {
+    try {
+      const batch = firestore().batch();
+
+      const receiverRef = firestore()
+        .collection('users')
+        .doc(route?.params?.uid);
+      const userRef = firestore()
+        .collection('users')
+        .doc(auth().currentUser?.uid);
+
+      // Update receiver document
+      batch.update(receiverRef, {
+        [`friendRequests.${auth().currentUser?.uid}`]: {
+          from: auth().currentUser?.uid,
+          status: 'pending',
+        },
+      });
+
+      // Update user document
+      batch.update(userRef, {
+        [`sentRequests.${route?.params?.uid}`]: {
+          to: route?.params?.uid,
+          status: 'pending',
+        },
+      });
+
+      // Commit the batch
+      await batch.commit();
+    } catch (error) {
+      console.error(error);
+    }
+  }
   useEffect(() => {
     getAllFeedsData();
   }, []);
@@ -62,7 +129,7 @@ const Profile = ({navigation}: any) => {
         {/*************************** Profile View ****************************/}
         <View
           style={{flexDirection: 'row', alignItems: 'center', marginTop: 20}}>
-         { profilex.profilePic?  <Image
+         { profile?.profilePic ?<Image
             style={{
               height: fontSize(100),
               width: fontSize(100),
@@ -70,8 +137,8 @@ const Profile = ({navigation}: any) => {
               borderWidth: 3,
               borderColor: colors.gray,
             }}
-            source={{uri: profilex?.profilePic}}
-          />:<Icon name="person-circle-outline" size={fontSize(100)} iconFamily='ionic' color={colors.grey}/>}
+            source={{uri: profile?.profilePic}}/>:
+            <Icon name="person-circle-outline" size={fontSize(100)} iconFamily='ionic' color={colors.grey}/>}
           <View
             style={{
               flexDirection: 'row',
@@ -96,18 +163,19 @@ const Profile = ({navigation}: any) => {
             </View>
           </View>
         </View>
-        <Text style={{color: colors.black, fontSize:16, fontWeight:'bold'}}>{profilex?.name?profilex?.name:'No name'}</Text>
-        <Text style={{color: colors.grey, }}>{profilex?.userName? '@'+profilex?.userName:'Set your user name'}</Text>
-        <Text style={{color: colors.black}}>{profilex.description?profilex.description:'no description added yet'}</Text>
+        <Text style={{color: colors.black, fontSize:16, fontWeight:'bold'}}>{ profile?.name?profile?.name:'No name'}</Text>
+        <Text style={{color: colors.grey, }}>{profile?.userName? '@'+profile?.userName:'Set your user name'}</Text>
+        <Text style={{color: colors.black}}>{profile?.description?profile?.description:'no description added yet'}</Text>
         <View style={{flexDirection:'row', alignItems:'center'}}>
 
         <Icon name='location' iconFamily='EvilIcons' color={colors.grey} size={20}/>
         <Text style={{color: colors.grey, marginLeft:5, marginTop:5,
-        }}>{profilex.location?profilex.location: 'Location'}</Text>
+        }}>{profile?.location?profile?.location: 'Location'}</Text>
         </View>
         {/********************* Buttons View **********************/}
         <View style={styles.btnsView}>
-          <CustomButton
+        {myProfile?  
+        <CustomButton
             height={35}
             flex={1.1}
             onPress={()=> navigation.navigate('ProfileSetup')}
@@ -118,7 +186,22 @@ const Profile = ({navigation}: any) => {
             btnColor={colors.black}
             borderRadius={50}
           />
+          :
           <CustomButton
+              height={35}
+              flex={1.1}
+              onPress={() =>
+                navigation.navigate('ChatScreen', {user: profile})
+              }
+              title={'Message'}
+              fontSize={fontSize(11)}
+              width={'35%'}
+              btnTextColor={colors.white}
+              btnColor={colors.black}
+              borderRadius={50}
+            />
+        }
+         {myProfile? <CustomButton
           disabled
             height={35}
             flex={1.1}
@@ -129,6 +212,29 @@ const Profile = ({navigation}: any) => {
             btnColor={colors.grey}
             borderRadius={50}
           />
+        :
+        <CustomButton
+        marginHorizontal={5}
+        flex={1.1}
+        width={'35%'}
+        onPress={() => handleAdd()}
+        height={35}
+        disabled={friend || sent}
+        fontSize={fontSize(11)}
+        title={
+          friend
+            ? 'Friend'
+            : sent
+            ? 'Sent'
+            : recieve
+            ? 'Accept'
+            : 'Add'
+        }
+        btnColor={friend ? colors.viewBorder : colors.black}
+        btnTextColor={friend ? colors.black : colors.white}
+        borderRadius={50}
+      />
+        }
         </View>
       </View>
       {/********************* Reels View **********************/}
