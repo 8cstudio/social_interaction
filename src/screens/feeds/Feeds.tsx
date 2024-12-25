@@ -16,6 +16,7 @@ import {
   Platform,
   Keyboard,
   StatusBar,
+  Alert,
 } from 'react-native';
 import {colors} from '../../assets/data/colors';
 import Icon from '../../components/customIcon/CustomIcon';
@@ -24,7 +25,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import firestore from '@react-native-firebase/firestore';
 import {
   height,
-  profile,
   width,
 } from '../../components/functions/GlobalFunctions';
 import auth from '@react-native-firebase/auth';
@@ -39,6 +39,8 @@ import {
 } from './FeedsHandlers';
 import RenderCommentItem from './RenderCommentItem';
 import Share from 'react-native-share';
+import { useDispatch, useSelector } from 'react-redux';
+import { addData } from '../../redux/ProfileSlice';
 
 const Feeds = ({navigation}: any) => {
   const images = [
@@ -65,6 +67,7 @@ const Feeds = ({navigation}: any) => {
     },
   ];
 
+  const profile = useSelector((state: any) => state.profile).data;
   // State to manage modal visibility and selected comments
   const [commentsVisible, setCommentsVisible] = useState(false);
   const [currentComments, setCurrentComments] = useState([]);
@@ -78,7 +81,33 @@ const Feeds = ({navigation}: any) => {
   ]); // Horizontal index
   const currentRef = useRef(0);
   const horizontalRef = useRef(0);
+  
+  const dispatch = useDispatch();
+  useEffect(() => {
 
+    const userDocRef = firestore()
+      .collection('users')
+      .doc(auth().currentUser?.uid);
+    // Attach a listener for document changes
+    const unsubscribe = userDocRef.onSnapshot(
+      doc => {
+        if (doc.exists) {
+          const userData: any = doc.data();
+          // const name = getCityName()
+          dispatch(addData(userData));
+          // getFriends(userData.friends);
+        } else {
+          Alert.alert('Empty', 'User Profile data is Empty');
+        }
+      },
+      error => {
+        console.error('Error listening to user document:', error);
+      },
+    );
+    // Cleanup the listener on unmount or dependency change
+    return () => unsubscribe();
+  }, []);
+  
   useEffect(() => {
     getAllFeedsData();
   }, []);
@@ -170,7 +199,6 @@ const Feeds = ({navigation}: any) => {
     }
   };
   console.log(insets);
-  
 
   // Handle viewable items changed
   const onViewableItemsChanged = useCallback(
@@ -489,23 +517,21 @@ export const RenderItem = React.memo(
       <View
         style={{
           width: width,
-          height: height - insets.top - insets.bottom ,
+          height: height - insets.top - insets.bottom,
         }}>
         <VideoPlayer
-        controlsStyles={{
-
-        }}
+          controlsStyles={{}}
           source={{uri: item?.uri}}
           resizeMode={'cover'}
           style={{
             width: width,
-            height: height - insets.top - insets.bottom ,
+            height: height - insets.top - insets.bottom,
             // backgroundColor: 'red',
           }}
           repeat={false}
           paused={!isCurrentVideo}
           onError={error => console.error('Video error:', error)}
-          controls = {false}
+          controls={false}
           bufferConfig={{
             // minBufferMs: 15000,
             // maxBufferMs: 30000,
@@ -528,43 +554,6 @@ export const RenderItem = React.memo(
         <View style={styles.rightContent}>
           <View />
           <View style={styles.likeCommentContainer}>
-            {i !== 0 && (
-              <View
-                style={{
-                  backgroundColor: colors.white,
-                  height: 40,
-                  width: 40,
-                  marginBottom: 20,
-                  borderRadius: 20,
-                  borderWidth: 2,
-                  borderColor: colors.black,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                {i === 1 ? (
-                  <SvgObjPath1 icon={svgobj1.sports} stroke={colors.black} />
-                ) : i === 2 ? (
-                  <SvgObjPath1
-                    icon={svgobj1.connections}
-                    stroke={colors.black}
-                  />
-                ) : i === 3 ? (
-                  <SvgObjPath1 icon={svgobj1.creative} stroke={colors.black} />
-                ) : i === 4 ? (
-                  <SvgObjPath1
-                    icon={svgobj1.workspace1}
-                    stroke={colors.black}
-                  />
-                ) : (
-                  i === 5 && (
-                    <SvgObjPath1
-                      icon={svgobj1.culture1}
-                      stroke={colors.black}
-                    />
-                  )
-                )}
-              </View>
-            )}
             <TouchableOpacity
               disabled
               onPress={() => {
@@ -580,7 +569,11 @@ export const RenderItem = React.memo(
                   borderWidth: 2,
                   borderColor: colors.white,
                 }}
-                source={require('../../assets/images/profile.png')}
+                source={
+                  item?.pic
+                    ? {uri: item.pic}
+                    : require('../../assets/images/profile.png')
+                }
               />
             </TouchableOpacity>
             <View style={styles.iconContainer}>
@@ -674,7 +667,11 @@ export const RenderItem = React.memo(
             alignItems: 'center',
           }}>
           <Image
-            source={require('../../assets/images/profile.png')}
+            source={
+              item?.pic
+                ? {uri: item.pic}
+                : require('../../assets/images/profile.png')
+            }
             style={{
               height: 35,
               width: 35,

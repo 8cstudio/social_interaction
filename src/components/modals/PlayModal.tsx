@@ -11,6 +11,12 @@ import {
 import {colors} from '../../assets/data/colors';
 import {svg} from '../../assets/data/svg';
 import {SVG} from '../svg/SVG';
+import {
+  onPausePlay,
+  onResumePlay,
+  onStartPlay,
+  onStopPlay,
+} from '../../screens/chatScreen/functions';
 import Icon from '../customIcon/CustomIcon';
 
 const PlayModal = ({
@@ -32,13 +38,13 @@ const PlayModal = ({
   });
   function close() {
     onRequestClose();
-    // playback.play && onStopPlay();
-    // setPlayBack({
-    //   current: Dimensions.get('window').width - 110,
-    //   total: 0,
-    //   play: false,
-    //   pause: true,
-    // });
+    playback.play && onStopPlay();
+    setPlayBack({
+      current: Dimensions.get('window').width - 110,
+      total: 0,
+      play: false,
+      pause: true,
+    });
   }
 
   return (
@@ -69,7 +75,6 @@ const PlayModal = ({
               width: '100%',
               color: colors.textColor,
               alignSelf: 'flex-start',
-              fontSize: 20,
               marginBottom: 5,
             }}>
             {title}
@@ -81,9 +86,9 @@ const PlayModal = ({
                 hitSlop={15}
                 style={{marginTop: 3}}
                 onPress={() => {
-                //   playback.play
-                //     ? onResumePlay(setPlayBack)
-                //     : onStartPlay(uri, setPlayBack);
+                  playback.play
+                    ? onResumePlay(setPlayBack)
+                    : onStartPlay(uri, setPlayBack);
                 }}>
                 <SVG
                   icon={svg.play}
@@ -96,7 +101,7 @@ const PlayModal = ({
               <TouchableOpacity
                 hitSlop={15}
                 onPress={() => {
-                //   onPausePlay(setPlayBack);
+                  onPausePlay(setPlayBack);
                 }}>
                 <SVG
                   icon={svg.pause}

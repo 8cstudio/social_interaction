@@ -21,28 +21,31 @@ import {
 } from 'react-native';
 import Icon from '../../components/customIcon/CustomIcon';
 import {colors} from '../../assets/data/colors';
+import {styles} from './styles';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import ImagePicker from 'react-native-image-crop-picker';
-import {useSelector} from 'react-redux';
 import {SVG, SvgObjPath1, SvgObjPath2} from '../../components/svg/SVG';
 import {svg} from '../../assets/data/svg';
 import DocumentPicker, {types} from 'react-native-document-picker';
 import PDF from 'react-native-pdf';
-
 import Video from 'react-native-video';
 import Media from './Media';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {createThumbnail} from 'react-native-create-thumbnail';
 import PdfThumbnail from 'react-native-pdf-thumbnail';
+import {checkPermission, onStopRecord} from './functions';
 import PlayModal from '../../components/modals/PlayModal';
 import RNFS from 'react-native-blob-util';
 import {RNCamera} from 'react-native-camera';
-import {elevation3, fontSize, formatTime, width } from '../../assets/data/TypeScript';
+import {elevation, fontSize, formatTime } from '../../assets/data/TypeScript';
 import fs from 'react-native-fs';
+import {ListItem} from '../../../src1/App1';
+import {width} from '../../../src1/theme';
+import moment from 'moment';
 import { svgobj1, svgobj2 } from '../../assets/data/svgobj';
-import { styles } from './styles';
+import { useSelector } from 'react-redux';
 
 const ChatScreen = ({navigation, route}: any) => {
   const uid = auth().currentUser?.uid
@@ -56,6 +59,8 @@ const ChatScreen = ({navigation, route}: any) => {
   const [play, setPlay]: any = useState(null);
   const [upload, setUpload] = useState(false);
   const profile = useSelector((state: any) => state.profile);
+  console.log(profile);
+  
   const [media, setMedia]: any = useState(null);
   const [type, setType]: any = useState(null);
   const [pickedName, setPickedName]: any = useState('');
@@ -72,6 +77,9 @@ const ChatScreen = ({navigation, route}: any) => {
   const [modal2Visible, setModal2Visible] = useState(false);
   const cameraRef: any = useRef(null);
   const isSendingMessage = useRef(false);
+  console.log("1: ",modalVisible);
+  console.log("2: ",modal2Visible);
+  
   const [playModal, setPlayModal] = useState({
     visible: false,
     uri: '',
@@ -195,58 +203,58 @@ const ChatScreen = ({navigation, route}: any) => {
   const sendMessage = async () => {
     isSendingMessage.current = true;
     let time = new Date().getTime();
-    // if (isRecordings.current) {
-    //   isRecordings.current = false;
-    //   const file = await onStopRecord(setIsRecording, setRecordedFile);
-    //   const messageData1 = {
-    //     text,
-    //     // local: {uri: mediaUrl.path, type: type},
-    //     media: {
-    //       uri: file,
-    //       type: 'audio',
-    //       thumbnail: '',
-    //     },
-    //     createdAt: firestore.FieldValue.serverTimestamp(),
-    //     from: currentUser?.uid,
-    //     to: user.id,
-    //     read: false,
-    //   };
+    if (isRecordings.current) {
+      isRecordings.current = false;
+      const file = await onStopRecord(setIsRecording, setRecordedFile);
+      const messageData1 = {
+        text,
+        // local: {uri: mediaUrl.path, type: type},
+        media: {
+          uri: file,
+          type: 'audio',
+          thumbnail: '',
+        },
+        createdAt: firestore.FieldValue.serverTimestamp(),
+        from: currentUser?.uid,
+        to: user.id,
+        read: false,
+      };
 
-    //   setMessages((prevMessages: any) => [messageData1, ...prevMessages]);
-    //   const batch = firestore().batch();
-    //   const mediaUrl: any = await uploadMedia(file, time);
+      setMessages((prevMessages: any) => [messageData1, ...prevMessages]);
+      const batch = firestore().batch();
+      const mediaUrl: any = await uploadMedia(file, time);
 
-    //   const messageData = {
-    //     text,
-    //     // local: {uri: mediaUrl.path, type: type},
-    //     media: {
-    //       uri: mediaUrl.uri,
-    //       type: 'audio',
-    //       thumbnail: '',
-    //     },
-    //     createdAt: firestore.FieldValue.serverTimestamp(),
-    //     from: currentUser?.uid,
-    //     to: user.id,
-    //     read: false,
-    //   };
-    //   const chatDocRef = firestore().collection('chats').doc(currentUser?.uid);
-    //   const userChatDocRef = chatDocRef.collection('chat').doc(user.id);
-    //   const newMessageDocRef = userChatDocRef.collection('messages').doc();
-    //   batch.set(chatDocRef, {a: 'aa'});
-    //   batch.set(userChatDocRef, {a: 'aa'});
-    //   batch.set(newMessageDocRef, messageData);
-    //   const chatDocRef1 = firestore().collection('chats').doc(user.id);
-    //   const userChatDocRef1 = chatDocRef1
-    //     .collection('chat')
-    //     .doc(currentUser?.uid);
-    //   const newMessageDocRef1 = userChatDocRef1.collection('messages').doc(); // Generate a new document reference with an ID
-    //   // Set data in the batch
-    //   batch.set(chatDocRef1, {a: 'aa'});
-    //   batch.set(userChatDocRef1, {a: 'aa'});
-    //   batch.set(newMessageDocRef1, messageData);
-    //   await batch.commit();
-    //   return;
-    // }
+      const messageData = {
+        text,
+        local: {uri: mediaUrl.path, type: type},
+        media: {
+          uri: mediaUrl.uri,
+          type: 'audio',
+          thumbnail: '',
+        },
+        createdAt: firestore.FieldValue.serverTimestamp(),
+        from: currentUser?.uid,
+        to: user.id,
+        read: false,
+      };
+      const chatDocRef = firestore().collection('chats').doc(currentUser?.uid);
+      const userChatDocRef = chatDocRef.collection('chat').doc(user.id);
+      const newMessageDocRef = userChatDocRef.collection('messages').doc();
+      batch.set(chatDocRef, {a: 'aa'});
+      batch.set(userChatDocRef, {a: 'aa'});
+      batch.set(newMessageDocRef, messageData);
+      const chatDocRef1 = firestore().collection('chats').doc(user.id);
+      const userChatDocRef1 = chatDocRef1
+        .collection('chat')
+        .doc(currentUser?.uid);
+      const newMessageDocRef1 = userChatDocRef1.collection('messages').doc(); // Generate a new document reference with an ID
+      // Set data in the batch
+      batch.set(chatDocRef1, {a: 'aa'});
+      batch.set(userChatDocRef1, {a: 'aa'});
+      batch.set(newMessageDocRef1, messageData);
+      await batch.commit();
+      return;
+    }
     if (text.length > 0 || media) {
       let mediaUrl: any = {uri: '', path: ''};
       if (media) {
@@ -363,16 +371,16 @@ const ChatScreen = ({navigation, route}: any) => {
             ? [
                 styles.msgContainer,
                 {alignSelf: 'flex-end', justifyContent: 'flex-end'},
-                elevation3,
+                elevation,
               ]
             : [
                 styles.msgContainer,
                 {alignSelf: 'flex-start', justifyContent: 'flex-start'},
-                elevation3,
+                elevation,
               ]
         }>
         {isCurrentUser && (
-          <View style={[styles.currentUserMsg, (!item?.media?.type && item?.media?.type !== 'audio') &&elevation3,{backgroundColor:(item?.media?.type&& item?.media?.type !== 'audio')?'rgba(0,0,0,0)':colors.myChatbg}]}>
+          <View style={[styles.currentUserMsg, (!item?.media?.type && item?.media?.type !== 'audio') &&elevation,{backgroundColor:(item?.media?.type&& item?.media?.type !== 'audio')?'rgba(0,0,0,0)':colors.myChatbg}]}>
             {item?.text !== '' && (
               <Text
                 style={{
@@ -382,7 +390,18 @@ const ChatScreen = ({navigation, route}: any) => {
                 {item.text}
               </Text>
             )}
-            {
+            {item?.media?.type === 'audio' ? (
+              <View style={{width: (width / 100) * 80}}>
+                <ListItem
+                current = {isCurrentUser}
+                  key={item?.media?.uri}
+                  currentPlaying={currentPlaying}
+                  setCurrentPlaying={setCurrentPlaying}
+                  item={{path: item?.media?.uri, uri: item?.media?.uri}}
+                  onPanStateChange={value => setShouldScroll(!value)}
+                />
+              </View>
+            ) : (
               item?.media?.type && (
                 <View
                   style={{
@@ -440,7 +459,7 @@ const ChatScreen = ({navigation, route}: any) => {
                   )}
                 </View>
               )
-            }
+            )}
             <View
               style={{
                 position: 'absolute',
@@ -502,7 +521,7 @@ const ChatScreen = ({navigation, route}: any) => {
           </TouchableOpacity>
         )}
         {!isCurrentUser && (
-          <View style={[styles.otherUserMsg,  (!item?.media?.type && item?.media?.type !== 'audio')&&elevation3,{backgroundColor:(item?.media?.type && item?.media?.type !== 'audio')?'rgba(0,0,0,0)':colors.black}]}>
+          <View style={[styles.otherUserMsg,  (!item?.media?.type && item?.media?.type !== 'audio')&&elevation,{backgroundColor:(item?.media?.type && item?.media?.type !== 'audio')?'rgba(0,0,0,0)':colors.black}]}>
             <View
               style={{
                 position: 'absolute',
@@ -523,7 +542,18 @@ const ChatScreen = ({navigation, route}: any) => {
               <Text style={{color: colors.myChatbg ,
                 fontSize: fontSize(12),}}>{item.text}</Text>
             )}
-            {
+            {item?.media?.type === 'audio' ? (
+              <View style={{width: (width / 100) * 80}}>
+                <ListItem
+                  current = {isCurrentUser}
+                  key={item?.media?.uri}
+                  currentPlaying={currentPlaying}
+                  setCurrentPlaying={setCurrentPlaying}
+                  item={{path: item?.media?.uri, uri: item?.media?.uri}}
+                  onPanStateChange={value => setShouldScroll(!value)}
+                />
+              </View>
+            ) : (
               item?.media?.type && (
                 <View
                   style={{
@@ -581,7 +611,7 @@ const ChatScreen = ({navigation, route}: any) => {
                     </TouchableOpacity>
                   )}
                 </View>
-              
+              )
             )}
             {item?.createdAt&&(!item?.media?.type || item?.media?.type === 'audio')&&<Text
               style={{
@@ -708,6 +738,7 @@ const ChatScreen = ({navigation, route}: any) => {
             inverted
             data={messages}
             renderItem={
+              // ({item, index})=><RenderItem item = {item} index= {index} currentUser= {currentUser} navigation= {navigation} user= {user} />
               renderMessage
             }
             keyExtractor={(item, index) => index.toString()}
@@ -740,7 +771,7 @@ const ChatScreen = ({navigation, route}: any) => {
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}>
-                  {/* <TouchableOpacity
+                  <TouchableOpacity
                     onPress={() => {
                       onStopRecord(setIsRecording, setRecordedFile);
                       setIsRecording(false);
@@ -756,7 +787,7 @@ const ChatScreen = ({navigation, route}: any) => {
                   </TouchableOpacity>
                   <Animated.Text style={[styles.buttonText, {opacity}]}>
                     Recording...
-                  </Animated.Text> */}
+                  </Animated.Text>
                 </View>
               ) : (
                 <>
@@ -824,9 +855,15 @@ const ChatScreen = ({navigation, route}: any) => {
                 ) : (
                   <TouchableOpacity
                     onPress={() => {
-                      // isRecordings.current = true;
-                      // checkPermission(setIsRecording);
+                      isRecordings.current = true;
+                      checkPermission(setIsRecording);
                     }}>
+                   <Icon
+                      name={'microphone'}
+                      iconFamily={'fontAwesome'}
+                      size={24}
+                      color={colors.white}
+                    /> 
                   {/* <SvgObjPath1 icon={svgobj1.mike} stroke={colors.white} /> */}
                   </TouchableOpacity>
                 )}
@@ -1006,7 +1043,6 @@ const ChatScreen = ({navigation, route}: any) => {
           visible={playModal.visible}
           onRequestClose={playModal.onPress}
         />
-
         {camera && (
           <RNCamera
             ref={cameraRef}
@@ -1083,268 +1119,292 @@ export default ChatScreen;
 
 
 
-const RenderItem = ({item, index, currentUser,navigation, user}: any) => {
-  const [shouldScroll, setShouldScroll] = useState<boolean>(true);
-  const [currentPlaying, setCurrentPlaying] = useState<string>('');
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modal2Visible, setModal2Visible] = useState(false);
-  const [play, setPlay]: any = useState(null);
-  const profile = useSelector((state: any) => state.profile);
+// const RenderItem = ({item, index, currentUser,navigation, user}: any) => {
+//   const [shouldScroll, setShouldScroll] = useState<boolean>(true);
+//   const [currentPlaying, setCurrentPlaying] = useState<string>('');
+//   const [modalVisible, setModalVisible] = useState(false);
+//   const [modal2Visible, setModal2Visible] = useState(false);
+//   const [play, setPlay]: any = useState(null);
+//   const profile = useSelector((state: any) => state.profile);
 
   
-  //Open Pdf or other documents in their respected app
-  async function open(url: any) {
-    try {
-      const supported = await Linking.canOpenURL(url);
-      if (supported) {
-        await Linking.openURL(url);
-      } else {
-        Alert.alert('Error', `This URL of  can't be opened: `);
-      }
-    } catch (error: any) {
+//   //Open Pdf or other documents in their respected app
+//   async function open(url: any) {
+//     try {
+//       const supported = await Linking.canOpenURL(url);
+//       if (supported) {
+//         await Linking.openURL(url);
+//       } else {
+//         Alert.alert('Error', `This URL of  can't be opened: `);
+//       }
+//     } catch (error: any) {
 
-      Alert.alert('Error', 'Failed to open URL: ' + error.message);
-    }
-  }
+//       Alert.alert('Error', 'Failed to open URL: ' + error.message);
+//     }
+//   }
     
-  const isCurrentUser = item.from === currentUser?.uid;
-  return (
-    <View
-      key={index.toString()}
-      style={
-        isCurrentUser
-          ? [
-              styles.msgContainer,
-              {alignSelf: 'flex-end', justifyContent: 'flex-end'},
-              elevation3,
-            ]
-          : [
-              styles.msgContainer,
-              {alignSelf: 'flex-start', justifyContent: 'flex-start'},
-              elevation3,
-            ]
-      }>
-      {isCurrentUser && (
-        <View style={[styles.currentUserMsg, (!item?.media?.type && item?.media?.type !== 'audio') &&elevation3,{backgroundColor:(item?.media?.type&& item?.media?.type !== 'audio')?'rgba(0,0,0,0)':colors.myChatbg}]}>
-          {item?.text !== '' && (
-            <Text
-              style={{
-                color: colors.black,
-                fontSize: fontSize(12),
-              }}>
-              {item.text}
-            </Text>
-          )}
-          {
-            item?.media?.type && (
-              <View
-                style={{
-                  height: 200,
-                  width: 150,
-                  alignItems:'flex-end',
-                  alignSelf:'flex-end'
-                }}>
-                <TouchableOpacity
-                  disabled={
-                    !(
-                      item.media.type === 'image' || item.media.type === 'pdf'
-                    )
-                  }
-                  onPress={() => {
-                    setPlay({uri: item.media.uri, type: item.media?.type});
-                    item.media.type === 'pdf'
-                      ? open(item.media.uri)
-                      : setModalVisible(true);
-                  }}>
-                  <Media
-                    uri={
-                      item.media.type === 'video' || item.media.type === 'pdf'
-                        ? item.media.thumbnail
-                        : item.media.uri
-                    }
-                    type={item?.media?.type}
-                    video={item?.media?.uri}
-                    createdAt={formatTime(item?.createdAt)}
-                  />
-                </TouchableOpacity>
-                {item.media?.type === 'video' && (
-                  <TouchableOpacity
-                    onPress={() => {
-                      setPlay({uri: item.media.uri, type: item.media?.type});
-                      setModalVisible(true);
-                    }}
-                    style={{
-                      height: '100%',
-                      width: width/2.5,
-                      backgroundColor: 'rgba(0,0,0,0.3)',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      position: 'absolute',
+//   const isCurrentUser = item.from === currentUser?.uid;
+//   return (
+//     <View
+//       key={index.toString()}
+//       style={
+//         isCurrentUser
+//           ? [
+//               styles.msgContainer,
+//               {alignSelf: 'flex-end', justifyContent: 'flex-end'},
+//               elevation,
+//             ]
+//           : [
+//               styles.msgContainer,
+//               {alignSelf: 'flex-start', justifyContent: 'flex-start'},
+//               elevation,
+//             ]
+//       }>
+//       {isCurrentUser && (
+//         <View style={[styles.currentUserMsg, (!item?.media?.type && item?.media?.type !== 'audio') &&elevation,{backgroundColor:(item?.media?.type&& item?.media?.type !== 'audio')?'rgba(0,0,0,0)':colors.myChatbg}]}>
+//           {item?.text !== '' && (
+//             <Text
+//               style={{
+//                 color: colors.black,
+//                 fontSize: fontSize(12),
+//               }}>
+//               {item.text}
+//             </Text>
+//           )}
+//           {item?.media?.type === 'audio' ? (
+//             <View style={{width: (width / 100) * 80}}>
+//               <ListItem
+//               current = {isCurrentUser}
+//                 key={item?.media?.uri}
+//                 currentPlaying={currentPlaying}
+//                 setCurrentPlaying={setCurrentPlaying}
+//                 item={{path: item?.media?.uri, uri: item?.media?.uri}}
+//                 onPanStateChange={(value: any) => setShouldScroll(!value)}
+//               />
+//             </View>
+//           ) : (
+//             item?.media?.type && (
+//               <View
+//                 style={{
+//                   height: 200,
+//                   width: 150,
+//                   alignItems:'flex-end',
+//                   alignSelf:'flex-end'
+//                 }}>
+//                 <TouchableOpacity
+//                   disabled={
+//                     !(
+//                       item.media.type === 'image' || item.media.type === 'pdf'
+//                     )
+//                   }
+//                   onPress={() => {
+//                     setPlay({uri: item.media.uri, type: item.media?.type});
+//                     item.media.type === 'pdf'
+//                       ? open(item.media.uri)
+//                       : setModalVisible(true);
+//                   }}>
+//                   <Media
+//                     uri={
+//                       item.media.type === 'video' || item.media.type === 'pdf'
+//                         ? item.media.thumbnail
+//                         : item.media.uri
+//                     }
+//                     type={item?.media?.type}
+//                     video={item?.media?.uri}
+//                     createdAt={formatTime(item?.createdAt)}
+//                   />
+//                 </TouchableOpacity>
+//                 {item.media?.type === 'video' && (
+//                   <TouchableOpacity
+//                     onPress={() => {
+//                       setPlay({uri: item.media.uri, type: item.media?.type});
+//                       setModal2Visible(true);
+//                     }}
+//                     style={{
+//                       height: '100%',
+//                       width: width/2.5,
+//                       backgroundColor: 'rgba(0,0,0,0.3)',
+//                       justifyContent: 'center',
+//                       alignItems: 'center',
+//                       position: 'absolute',
 
-                      borderRadius: 20,
-                    }}>
-                    <Icon
-                      name={'play'}
-                      size={50}
-                      iconFamily={'antDesign'}
-                      color={colors.white}
-                    />
-                  </TouchableOpacity>
-                )}
-              </View>
-            
-          )}
-          <View
-            style={{
-              position: 'absolute',
-              top: 12,
-              right: -4,
-              // backgroundColor: 'red',
-              transform: [{rotate: '225deg'}],
-            }}>
-            {(!item?.media?.type || item?.media?.type === 'audio')&&<SVG
-              height={6}
-              width={12}
-              stroke={colors.myChatbg}
-              // fill={colors.chatBubble}
-              color={colors.myChatbg}
-              icon={svg.corner}
-            />}
-          </View>
-          {item?.createdAt&&(!item?.media?.type || item?.media?.type === 'audio')&&<Text
-            style={{
-              color: colors.black,
-              fontSize: fontSize(11),
-              textAlign: 'right',
-            }}>
-            {formatTime(item?.createdAt)}
-          </Text>}
-        </View>
-      )}
-      {isCurrentUser && (
-        <TouchableOpacity onPress={()=>navigation.navigate("Profile",{uid:currentUser.uid, myProfile:true})} style={[styles.profileSection]}>
-          <Text style={{fontSize: fontSize(15), fontWeight: '700', color: colors.grey}}>
-            {profile?.data?.name.length <= 7
-              ? profile?.data?.name
-              : profile?.data?.name.substring(0, 7)}
-          </Text>
-          {
-            <Image
-              style={{borderRadius: 25, height: 50, width: 50, borderWidth:1, borderColor:colors.black}}
-              source={{uri: profile?.data?.avatar?profile?.data?.avatar:profile?.data?.profilePic?profile?.data?.profilePic:
-                'https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjkzNy1hZXctMTY1LWtsaGN3ZWNtLmpwZw.jpg'
-              }}
-            />}
-        </TouchableOpacity>
-      )}
-      {!isCurrentUser && (
-        <TouchableOpacity  onPress={()=>navigation.navigate("Profile",{uid:user.id})}  style={[styles.profileSection]}>
-          <Text style={{fontSize: fontSize(15), color: colors.grey}}>
-            {user.name.length <= 7 ? user.name : user.name.substring(0, 7)}
-          </Text>
-          <Image
-              style={{borderRadius: 25, height: 50, width: 50, borderWidth:1, borderColor:colors.black}}
-            source={{
-              uri: user?.avatar
-                ? user?.avatar
-                : user?.profilePic
-                ? user?.profilePic
-                : 'https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjkzNy1hZXctMTY1LWtsaGN3ZWNtLmpwZw.jpg',
-            }}
-          />
-        </TouchableOpacity>
-      )}
-      {!isCurrentUser && (
-        <View style={[styles.otherUserMsg,  (!item?.media?.type && item?.media?.type !== 'audio')&&elevation3,{backgroundColor:(item?.media?.type && item?.media?.type !== 'audio')?'rgba(0,0,0,0)':colors.black}]}>
-          <View
-            style={{
-              position: 'absolute',
-              top: 12,
-              left: -4,
-              transform: [{rotate: '45deg'}],
-            }}>
-            {(!item?.media?.type || item?.media?.type === 'audio')&&<SVG
-              height={6}
-              width={12}
-              stroke={colors.black}
-              // fill={colors.chatBubble}
-              color={colors.black}
-              icon={svg.corner}
-            />}
-          </View>
-          {!item?.media?.type && (
-            <Text style={{color: colors.myChatbg ,
-              fontSize: fontSize(12),}}>{item.text}</Text>
-          )}
-          {item?.media?.type && (
-              <View
-                style={{
-                  height: 200,
-                  width: 150,
-                }}>
-                <TouchableOpacity
-                  disabled={
-                    !(
-                      item.media.type === 'image' || item.media.type === 'pdf'
-                    )
-                  }
-                  onPress={() => {
-                    setPlay({uri: item.media.uri, type: item.media?.type});
-                    item.media.type === 'pdf'
-                      ? open(item?.media?.uri)
-                      : setModalVisible(true);
-                  }}>
-                  <Media
-                    uri={
-                      item.media.type === 'video' || item.media.type === 'pdf'
-                        ? item.media.thumbnail
-                        : item.media.uri
-                    }
-                    type={item.media.type}
+//                       borderRadius: 20,
+//                     }}>
+//                     <Icon
+//                       name={'play'}
+//                       size={50}
+//                       iconFamily={'antDesign'}
+//                       color={colors.white}
+//                     />
+//                   </TouchableOpacity>
+//                 )}
+//               </View>
+//             )
+//           )}
+//           <View
+//             style={{
+//               position: 'absolute',
+//               top: 12,
+//               right: -4,
+//               // backgroundColor: 'red',
+//               transform: [{rotate: '225deg'}],
+//             }}>
+//             {(!item?.media?.type || item?.media?.type === 'audio')&&<SVG
+//               height={6}
+//               width={12}
+//               stroke={colors.myChatbg}
+//               // fill={colors.chatBubble}
+//               color={colors.myChatbg}
+//               icon={svg.corner}
+//             />}
+//           </View>
+//           {item?.createdAt&&(!item?.media?.type || item?.media?.type === 'audio')&&<Text
+//             style={{
+//               color: colors.black,
+//               fontSize: fontSize(11),
+//               textAlign: 'right',
+//             }}>
+//             {formatTime(item?.createdAt)}
+//           </Text>}
+//         </View>
+//       )}
+//       {isCurrentUser && (
+//         <TouchableOpacity onPress={()=>navigation.navigate("Profile")} style={[styles.profileSection]}>
+//           <Text style={{fontSize: fontSize(15), fontWeight: '700', color: colors.grey}}>
+//             {profile?.data?.name.length <= 7
+//               ? profile?.data?.name
+//               : profile?.data?.name.substring(0, 7)}
+//           </Text>
+//           {
+//             <Image
+//               style={{borderRadius: 25, height: 50, width: 50, borderWidth:1, borderColor:colors.black}}
+//               source={{uri: profile?.data?.avatar?profile?.data?.avatar:profile?.data?.profilePic?profile?.data?.profilePic:
+//                 'https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjkzNy1hZXctMTY1LWtsaGN3ZWNtLmpwZw.jpg'
+//               }}
+//             />}
+//         </TouchableOpacity>
+//       )}
+//       {!isCurrentUser && (
+//         <TouchableOpacity  onPress={()=>navigation.navigate("Profile",{id:user.id})}  style={[styles.profileSection]}>
+//           <Text style={{fontSize: fontSize(15),color: colors.grey}}>
+//             {user.name.length <= 7 ? user.name : user.name.substring(0, 7)}
+//           </Text>
+//           <Image
+//               style={{borderRadius: 25, height: 50, width: 50, borderWidth:1, borderColor:colors.black}}
+//             source={{
+//               uri: user?.avatar
+//                 ? user?.avatar
+//                 : user?.profilePic
+//                 ? user?.profilePic
+//                 : 'https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjkzNy1hZXctMTY1LWtsaGN3ZWNtLmpwZw.jpg',
+//             }}
+//           />
+//         </TouchableOpacity>
+//       )}
+//       {!isCurrentUser && (
+//         <View style={[styles.otherUserMsg,  (!item?.media?.type && item?.media?.type !== 'audio')&&elevation,{backgroundColor:(item?.media?.type && item?.media?.type !== 'audio')?'rgba(0,0,0,0)':colors.black}]}>
+//           <View
+//             style={{
+//               position: 'absolute',
+//               top: 12,
+//               left: -4,
+//               transform: [{rotate: '45deg'}],
+//             }}>
+//             {(!item?.media?.type || item?.media?.type === 'audio')&&<SVG
+//               height={6}
+//               width={12}
+//               stroke={colors.black}
+//               // fill={colors.chatBubble}
+//               color={colors.black}
+//               icon={svg.corner}
+//             />}
+//           </View>
+//           {!item?.media?.type && (
+//             <Text style={{color: colors.myChatbg ,
+//               fontSize: fontSize(12),}}>{item.text}</Text>
+//           )}
+//           {item?.media?.type === 'audio' ? (
+//             <View style={{width: (width / 100) * 80}}>
+//               <ListItem
+//                 current = {isCurrentUser}
+//                 key={item?.media?.uri}
+//                 currentPlaying={currentPlaying}
+//                 setCurrentPlaying={setCurrentPlaying}
+//                 item={{path: item?.media?.uri, uri: item?.media?.uri}}
+//                 onPanStateChange={(value: any) => setShouldScroll(!value)}
+//               />
+//             </View>
+//           ) : (
+//             item?.media?.type && (
+//               <View
+//                 style={{
+//                   height: 200,
+//                   width: 150,
+//                 }}>
+//                 <TouchableOpacity
+//                   disabled={
+//                     !(
+//                       item.media.type === 'image' || item.media.type === 'pdf'
+//                     )
+//                   }
+//                   onPress={() => {
+//                     setPlay({uri: item.media.uri, type: item.media?.type});
+//                     item.media.type === 'pdf'
+//                       ? open(item?.media?.uri)
+//                       : setModalVisible(true);
+//                   }}>
+//                   <Media
+//                     uri={
+//                       item.media.type === 'video' || item.media.type === 'pdf'
+//                         ? item.media.thumbnail
+//                         : item.media.uri
+//                     }
+//                     type={item.media.type}
                     
-                    video={item?.media?.uri}
-                    createdAt={formatTime(item?.createdAt)}
-                  />
-                </TouchableOpacity>
-                {item.media?.type === 'video' && (
-                  <TouchableOpacity
-                    onPress={() => {
-                      setPlay({
-                        uri: item.media.uri,
-                        type: item.media?.type,
-                      });
-                      setModalVisible(true);
-                    }}
-                    style={{
-                      height: '100%',
-                      width: 150,
-                      backgroundColor: 'rgba(0,0,0,0.3)',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      borderRadius: 20,
-                      position: 'absolute',
-                    }}>
-                    <Icon
-                      name={'play'}
-                      size={50}
-                      iconFamily={'antDesign'}
-                      color={colors.white}
-                    />
-                  </TouchableOpacity>
-                )}
-              </View>
-            
-          )}
-          {item?.createdAt&&(!item?.media?.type || item?.media?.type === 'audio')&&<Text
-            style={{
-              color: isCurrentUser?colors.black:colors.myChatbg,
-              fontSize: fontSize(11),
-              textAlign: 'right',
-            }}>
-            {formatTime(item?.createdAt)}
-          </Text>}
-        </View>
-      )}
-    </View>
-  );
-};
+//                     video={item?.media?.uri}
+//                     createdAt={formatTime(item?.createdAt)}
+//                   />
+//                 </TouchableOpacity>
+//                 {item.media?.type === 'video' && (
+//                   <TouchableOpacity
+//                     onPress={() => {
+//                       setPlay({
+//                         uri: item.media.uri,
+//                         type: item.media?.type,
+//                       });
+//                       setModalVisible(true);
+//                     }}
+//                     style={{
+//                       height: '100%',
+//                       width: 150,
+//                       backgroundColor: 'rgba(0,0,0,0.3)',
+//                       justifyContent: 'center',
+//                       alignItems: 'center',
+//                       borderRadius: 20,
+//                       position: 'absolute',
+//                     }}>
+//                     <Icon
+//                       name={'play'}
+//                       size={50}
+//                       iconFamily={'antDesign'}
+//                       color={colors.white}
+//                     />
+//                   </TouchableOpacity>
+//                 )}
+//               </View>
+//             )
+//           )}
+//           {item?.createdAt&&(!item?.media?.type || item?.media?.type === 'audio')&&<Text
+//             style={{
+//               color: isCurrentUser?colors.black:colors.myChatbg,
+//               fontSize: fontSize(11),
+//               textAlign: 'right',
+//               marginRight:10,
+//             }}>
+//             {formatTime(item?.createdAt)}
+//           </Text>}
+//         </View>
+//       )}
+//     </View>
+//   );
+// };

@@ -1,5 +1,5 @@
 import {Alert, Image, ImageBackground, SafeAreaView, StyleSheet, Text, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import { styles } from './styles';
 // import {styles} from './styles';
 import auth from '@react-native-firebase/auth';
@@ -10,7 +10,11 @@ import auth from '@react-native-firebase/auth';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import { addData } from '../../redux/ProfileSlice';
+import { useDispatch } from 'react-redux';
+import firestore from '@react-native-firebase/firestore';
 function SplashScreen({navigation}: any) {
+  const navigate = useRef(false)
 //   const dispatch = useDispatch();
 //   const [isAlertVisible, setIsAlertVisible] = useState(false);
 //   const [alertData, setAlertData] = useState({
@@ -32,10 +36,7 @@ function SplashScreen({navigation}: any) {
         //   });
         // } else {
           if (data.remember === true && data.type === 'google') {
-            navigation.reset({
-              index: 0,
-              routes: [{name: 'Home'}],
-            });
+            getData()
           } else if (data.remember === false && data.type === 'google') {
             await GoogleSignin.revokeAccess().then((t)=>{}).catch((e)=>{
             })
@@ -46,10 +47,7 @@ function SplashScreen({navigation}: any) {
               routes: [{name: 'LoginScreen'}],
             });
           } else if (data.remember === true && data.type === 'email') {
-            navigation.reset({
-              index: 0,
-              routes: [{name: 'Home'}],
-            });
+            getData()
           } else if (data.remember === false && data.type === 'email') {
             auth().signOut();
             navigation.reset({
@@ -72,6 +70,43 @@ function SplashScreen({navigation}: any) {
     }, 2000);
   }, []);
 //   }, [isAlertVisible]);
+const dispatch = useDispatch();
+
+async function getData() {
+  const userDocRef = firestore()
+    .collection('users')
+    .doc(auth().currentUser?.uid);
+  const unsubscribe = userDocRef.onSnapshot(
+    doc => {
+      if (doc.exists) {
+        const userData: any = doc.data();
+        // const name = getCityName()
+        dispatch(addData(userData));
+        if(!navigate.current){
+          navigate.current = true
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'Home'}],
+        });
+      }
+        // getFriends(userData.friends);
+      } else {
+        if(!navigate.current){
+          navigate.current = true
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'Home'}],
+        });
+        Alert.alert('Empty', 'User Profile data is Empty');
+      }
+      }
+    },
+    error => {
+      console.error('Error listening to user document:', error);
+    },
+  );
+  return () => unsubscribe();
+}
 
   return (
     <SafeAreaView style={styles.container}>

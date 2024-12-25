@@ -5,7 +5,17 @@ export const {height, width} = Dimensions.get('screen');
 export function fontSize(font: number) {
     return font / (430 / width);
   }
-
+  export const formatDuration = (duration:any) => {
+    // Convert duration from milliseconds to seconds
+    const totalSeconds = Math.floor(duration / 1000);
+  
+    // Get minutes and remaining seconds
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+  
+    // Format it as 'minutes:seconds'
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  };
 
   export const elevation3 = {
     shadowColor: '#000',
@@ -17,6 +27,18 @@ export function fontSize(font: number) {
     shadowRadius: 3.62,
   
     elevation: 9,
+  };
+
+  export const elevation = {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity:0,
+    shadowRadius: 0,
+  
+    elevation: 0,
   };
   export  const insect = useSafeAreaInsets();
 

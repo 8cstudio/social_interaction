@@ -4,6 +4,9 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+import { useRef } from 'react';
+import { addData } from '../../redux/ProfileSlice';
 //Sign in with google and stored the profile data in firebase firestore
 export const signInWithGoogle = async (setISLoading: any, navigation: any) => {
     setISLoading(true);
@@ -78,7 +81,6 @@ export const signInWithGoogle = async (setISLoading: any, navigation: any) => {
     }
   };
 
-  
 //Handle Login with email and password
 export const handleLogin = async (
     setISLoading: any,
@@ -97,7 +99,6 @@ export const handleLogin = async (
           console.log(userData.user.emailVerified);
           // if (userData.user.emailVerified) {
             await saveData('email');
-  
             navigation.reset({
               index: 0,
               routes: [{name: 'Home'}],
