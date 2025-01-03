@@ -419,7 +419,7 @@ const Profile = ({navigation, route}: any) => {
         ) : allFeedsCollection === null ? (
           <ActivityIndicator size={'large'} color={'black'} />
         ) : (
-          <Text style={{fontSize: 18, color: colors.black}}>
+          <Text style={{fontSize: 18, color: colors.black,textAlign:'center', fontWeight:'700', marginVertical:30}}>
             No Data Available
           </Text>
         )}
