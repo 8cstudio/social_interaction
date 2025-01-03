@@ -12,10 +12,10 @@ import {colors} from '../../assets/data/colors';
 import Icon from '../../components/customIcon/CustomIcon';
 import {useNavigation} from '@react-navigation/native';
 
-import auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {useSelector} from 'react-redux';
+import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 const mockData = [
   {id: 1, name: 'Sara', status: 'New Footage', time: '11:40 pm', icon: '🔥'},
@@ -35,6 +35,8 @@ const Messages = () => {
     ? Object.keys(profilex?.friends)?.length
     : 0;
   const myId = auth().currentUser?.uid;
+  const [showChats, setShowChats]= useState(false)
+  const [showFriends, setShowFriends]= useState(false)
   const [chatUserIds, setChatUserIds]: any = useState([]);
   // console.log(friends);
   useEffect(() => {
@@ -129,41 +131,8 @@ const Messages = () => {
     ? Object.keys(profilex.friendRequests).length
     : 0;
   const navigation: any = useNavigation();
-  // const renderChatItem = ({item}: any) => (
-  //   <TouchableOpacity
-  //     onPress={() => navigation.navigate('ChatScreen')}
-  //     style={styles.chatItem}>
-  //     <Image
-  //       source={{uri: 'https://via.placeholder.com/50'}} // Replace with actual profile image URLs
-  //       style={styles.profileImage}
-  //     />
-  //     <View style={{flex: 1, marginHorizontal: 10}}>
-  //       <Text style={styles.chatName}>
-  //         {item.name} {item.icon}
-  //       </Text>
-  //       <Text
-  //         style={[
-  //           styles.chatStatus,
-  //           {
-  //             color:
-  //               item.status === 'New Footage' || item.status === 'New chat'
-  //                 ? colors.pink
-  //                 : item.status === 'Opened'
-  //                 ? colors.green
-  //                 : item.status === 'Delivered'
-  //                 ? colors.blueText
-  //                 : colors.lightBlue,
-  //           },
-  //         ]}>
-  //         {item.status}
-  //       </Text>
-  //     </View>
-  //     <Text style={styles.chatTime}>{item.time}</Text>
-  //   </TouchableOpacity>
-  // );
   const renderFriends = ({item}: any) => (
     <View
-      // onPress={() => navigation.navigate('ChatScreen')}
       style={styles.chatItem}>
       <TouchableOpacity
         onPress={() => navigation.navigate('Profile', {id: item.id})}>
@@ -176,7 +145,7 @@ const Messages = () => {
           style={styles.profileImage}
         />
       </TouchableOpacity>
-      <View style={{flex: 1, marginHorizontal: 10}}>
+      <TouchableOpacity  onPress={()=>navigation.navigate('ChatScreen', {user: item})} style={{flex: 1, marginHorizontal: 10}}>
         <Text style={styles.chatName}>
           {item.name}
           {/* {item.icon} */}
@@ -185,26 +154,17 @@ const Messages = () => {
           style={[
             styles.chatStatus,
             {
-              color:
-                // item.status === 'New Footage' || item.status === 'New chat'
-                //   ? colors.pink
-                //   : item.status === 'Opened'
-                //   ? colors.green
-                //   : item.status === 'Delivered'
-                //   ? colors.blueText
-                //   :
-                colors.lightBlue,
+              color:colors.lightBlue,
             },
           ]}>
           {item.status ? item.status : 'Opened'}
         </Text>
-      </View>
+      </TouchableOpacity>
       <Text style={styles.chatTime}>{item.time ? item.time : '09:43 pm'}</Text>
     </View>
   );
   const renderChatPeople = ({item}: any) => (
     <View
-      // onPress={() => navigation.navigate('ChatScreen')}
       style={styles.chatItem}>
       <TouchableOpacity
         onPress={() => navigation.navigate('Profile', {id: item.id})}>
@@ -226,15 +186,7 @@ const Messages = () => {
           style={[
             styles.chatStatus,
             {
-              color:
-                // item.status === 'New Footage' || item.status === 'New chat'
-                //   ? colors.pink
-                //   : item.status === 'Opened'
-                //   ? colors.green
-                //   : item.status === 'Delivered'
-                //   ? colors.blueText
-                //   :
-                colors.lightBlue,
+              color:colors.lightBlue,
             },
           ]}>
           {item.status ? item.status : 'Opened'}
@@ -321,7 +273,7 @@ const Messages = () => {
                   </View>
                 )}
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={()=>navigation.navigate('SearchUser')}>
                 <Icon
                   name="search1"
                   iconFamily="antDesign"
@@ -352,29 +304,29 @@ const Messages = () => {
         <TouchableOpacity disabled style={styles.section}>
           <Text style={styles.sectionTitle}>Live Chat</Text>
         </TouchableOpacity>
-        <View style={styles.section}>
+        <TouchableOpacity onPress={()=>setShowChats(!showChats)} style={styles.section}>
           <Text style={styles.sectionTitle}>Chat{userDetails.length>0 && `  (${userDetails.length})`}</Text>
-        </View>
+        </TouchableOpacity>
         {/* Chat List */}
-        <View style={{}}>
-          <FlatList
+      {showChats&&  <View style={{}}>
+         {userDetails.length>0? <FlatList
             data={userDetails}
             renderItem={renderChatPeople}
             keyExtractor={item => item.id.toString()}
-          />
-        </View> 
+          />:<Text style={{fontSize:18,color:colors.black, textAlign:'center',marginVertical:20, fontWeight:'700'}}>No Chats Available</Text>}
+        </View> }
 
         {/* Friends Section */}
-        <TouchableOpacity disabled style={styles.section}>
+        <TouchableOpacity  onPress={()=>setShowFriends(!showFriends)} style={styles.section}>
           <Text style={styles.sectionTitle}>Friends {`(${friendsCount})`}</Text>
         </TouchableOpacity>
-        <View style={{}}>
-          <FlatList
+       {showFriends&& <View style={{}}>
+        {friends.length>0 ? <FlatList
             data={friends}
             renderItem={renderFriends}
             keyExtractor={item => item.id.toString()}
-          />
-        </View>
+          />:<Text style={{fontSize:18,color:colors.black, textAlign:'center',marginVertical:20, fontWeight:'700'}}>No Friends Available</Text>}
+        </View>}
       </View>
       {/* Show Menu */}
       {showMenu && (
@@ -440,7 +392,7 @@ const Messages = () => {
             top: 54,
             borderRadius: 12,
           }}>
-          <Text style={{color: colors.white}}>Logout</Text>
+          <Text style={{color: colors.white, paddingHorizontal:5}}>Logout</Text>
         </TouchableOpacity>
       )}
     </SafeAreaView>

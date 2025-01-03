@@ -59,7 +59,7 @@ const ChatScreen = ({navigation, route}: any) => {
   const [play, setPlay]: any = useState(null);
   const [upload, setUpload] = useState(false);
   const profile = useSelector((state: any) => state.profile);
-  console.log(profile);
+  // console.log(profile);
   
   const [media, setMedia]: any = useState(null);
   const [type, setType]: any = useState(null);
@@ -77,8 +77,8 @@ const ChatScreen = ({navigation, route}: any) => {
   const [modal2Visible, setModal2Visible] = useState(false);
   const cameraRef: any = useRef(null);
   const isSendingMessage = useRef(false);
-  console.log("1: ",modalVisible);
-  console.log("2: ",modal2Visible);
+  // console.log("1: ",modalVisible);
+  // console.log("2: ",modal2Visible);
   
   const [playModal, setPlayModal] = useState({
     visible: false,
@@ -204,8 +204,12 @@ const ChatScreen = ({navigation, route}: any) => {
     isSendingMessage.current = true;
     let time = new Date().getTime();
     if (isRecordings.current) {
+      console.log("Recordings");
+      
       isRecordings.current = false;
       const file = await onStopRecord(setIsRecording, setRecordedFile);
+      console.log(file);
+      
       const messageData1 = {
         text,
         // local: {uri: mediaUrl.path, type: type},
@@ -220,13 +224,15 @@ const ChatScreen = ({navigation, route}: any) => {
         read: false,
       };
 
-      setMessages((prevMessages: any) => [messageData1, ...prevMessages]);
+      // setMessages((prevMessages: any) => [messageData1, ...prevMessages]);
       const batch = firestore().batch();
       const mediaUrl: any = await uploadMedia(file, time);
+      console.log(mediaUrl);
+      
 
       const messageData = {
         text,
-        local: {uri: mediaUrl.path, type: type},
+        // local: {uri: mediaUrl.path, type: type},
         media: {
           uri: mediaUrl.uri,
           type: 'audio',

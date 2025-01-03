@@ -23,10 +23,10 @@ import CustomAlert from '../../components/modals/CustomAlert';
 const LoginScreen = ({navigation}: any) => {
   // const dispatch = useDispatch();
   // const data = useSelector((state: any) => state.data);
-  const [resend, setResend] = useState(false);
   const [isLoading, setISLoading] = useState(false);
   // const [check, setCheck]: any = useState(false);
   // const [googleSignedIn, setGoogleSignedIn]: any = useState(false);
+  const [resend, setResend] = useState(false);
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [alertData, setAlertData] = useState({
     title: '',

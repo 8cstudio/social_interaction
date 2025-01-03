@@ -201,7 +201,7 @@ const fetchUserData = async () => {
               borderRadius={50}
             />
         }
-         {myProfile? <CustomButton
+         <CustomButton
           disabled
             height={35}
             flex={1.1}
@@ -212,8 +212,8 @@ const fetchUserData = async () => {
             btnColor={colors.grey}
             borderRadius={50}
           />
-        :
-        <CustomButton
+      
+         {/* <CustomButton
         marginHorizontal={5}
         flex={1.1}
         width={'35%'}
@@ -233,8 +233,8 @@ const fetchUserData = async () => {
         btnColor={friend ? colors.viewBorder : colors.black}
         btnTextColor={friend ? colors.black : colors.white}
         borderRadius={50}
-      />
-        }
+      /> */}
+      
         </View>
       </View>
       {/********************* Reels View **********************/}

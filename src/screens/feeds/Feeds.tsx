@@ -83,8 +83,8 @@ const Feeds = ({navigation}: any) => {
   const horizontalRef = useRef(0);
   
   const dispatch = useDispatch();
+  //Get Current users profile data
   useEffect(() => {
-
     const userDocRef = firestore()
       .collection('users')
       .doc(auth().currentUser?.uid);
@@ -436,7 +436,6 @@ const Feeds = ({navigation}: any) => {
                           style={{height: 30, width: 30, borderRadius: 40}}
                           source={require('../../assets/images/profile.png')}
                         />
-                        {/* FlatList main reolies aany thy  */}
                         <View style={{marginLeft: 10}}>
                           <Text style={styles.commentText}>
                             {item.reply[0]?.name}

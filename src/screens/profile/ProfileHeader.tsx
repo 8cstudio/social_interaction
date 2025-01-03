@@ -30,7 +30,7 @@ const ProfileHeader = (data:any) => {
         />
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={()=>navigation.navigate('AddFriendsScreen')} style={{}}>
+      <TouchableOpacity onPress={()=>navigation.navigate('SearchUser')} style={{}}>
         <Icon
           name="search1"
           iconFamily="antDesign"
@@ -54,7 +54,7 @@ const ProfileHeader = (data:any) => {
         />
       </TouchableOpacity>
       <TouchableOpacity
-      onPress={()=>navigation.navigate('SettingsScreen', {profilex:data})}
+      onPress={()=> navigation.navigate('ProfileSetup')}
       >
         <Icon
           name="setting"

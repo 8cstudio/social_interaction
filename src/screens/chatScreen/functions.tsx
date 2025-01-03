@@ -70,24 +70,38 @@ export const onStartRecord = async (setIsRecording: any) => {
   });
   setIsRecording(true);
 };
-export const onStopRecord = async (
-  setIsRecording: any,
-  setRecordedFile: any,
-) => {
-  let contentType ="audio/mp4";
-  const result = await audioRecorderPlayer.stopRecorder();
-  // const storageRef = storage().ref(`chat_media/${new Date().getTime()}`);
-  // await storageRef.putFile(result, { contentType });
-  // const downloadUrl = await storageRef.getDownloadURL();
-  // console.log(downloadUrl);
-  // return;
-  
-  audioRecorderPlayer.removeRecordBackListener();
-  setIsRecording(false);
-  setRecordedFile(result); // Store the recorded file path for playback or further processing
-  console.log('Video player stoped');
-  return result;
-  // onStartPlay(result)
+export const onStopRecord = async (setIsRecording:any, setRecordedFile:any) => {
+  try {
+    const result = await audioRecorderPlayer.stopRecorder();
+    audioRecorderPlayer.removeRecordBackListener();
+
+    console.log('Recorded file path:', result);
+
+    if (!result) {
+      throw new Error('No file path returned by the recorder.');
+    }
+
+    // Check if the file exists
+    const fileExists = await ReactNativeBlobUtil.fs.exists(result);
+    if (!fileExists) {
+      throw new Error(`File does not exist at path: ${result}`);
+    }
+
+    setIsRecording(false);
+    setRecordedFile(result); // Store the recorded file path for further processing
+    console.log('Recording stopped and file saved:', result);
+    return result
+
+    // Optional: Upload to Firebase (uncomment if needed)
+    // const contentType = "audio/mp4"; // Update if the format is different
+    // const storageRef = storage().ref(`chat_media/${new Date().getTime()}`);
+    // await storageRef.putFile(result, { contentType });
+    // const downloadUrl = await storageRef.getDownloadURL();
+    // console.log('File uploaded to Firebase:', downloadUrl);
+  } catch (error) {
+    console.error('Error in onStopRecord:', error);
+    Alert.alert('Recording Error', 'Unable to process the recorded file. Please try again.');
+  }
 };
 
 export const onStartPlay = async (file: any, setPlayBack: any,) => {
