@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  ScrollView,
 } from 'react-native';
 import {colors} from '../../assets/data/colors';
 import Icon from '../../components/customIcon/CustomIcon';
@@ -198,8 +199,6 @@ const Messages = () => {
 
   return (
     <SafeAreaView style={{flex: 1, width: '100%', backgroundColor: '#fff'}}>
-      <View style={{flex: 1, paddingHorizontal: 20}}>
-        {/* Header */}
         <View style={styles.header}>
           <View
             style={{
@@ -292,6 +291,8 @@ const Messages = () => {
             </View>
           </View>
         </View>
+      <ScrollView showsVerticalScrollIndicator={false} style={{flexGrow: 1, paddingHorizontal: 20, marginBottom:85}}>
+        {/* Header */}
 
         {/* Notifications */}
         <TouchableOpacity disabled style={styles.notificationBar}>
@@ -310,6 +311,7 @@ const Messages = () => {
         {/* Chat List */}
       {showChats&&  <View style={{}}>
          {userDetails.length>0? <FlatList
+         scrollEnabled={false}
             data={userDetails}
             renderItem={renderChatPeople}
             keyExtractor={item => item.id.toString()}
@@ -322,12 +324,13 @@ const Messages = () => {
         </TouchableOpacity>
        {showFriends&& <View style={{}}>
         {friends.length>0 ? <FlatList
+        scrollEnabled={false}
             data={friends}
             renderItem={renderFriends}
             keyExtractor={item => item.id.toString()}
           />:<Text style={{fontSize:18,color:colors.black, textAlign:'center',marginVertical:20, fontWeight:'700'}}>No Friends Available</Text>}
         </View>}
-      </View>
+      </ScrollView>
       {/* Show Menu */}
       {showMenu && (
         <TouchableOpacity
@@ -405,6 +408,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 10,
+    paddingHorizontal: 20,
   },
   title: {
     fontSize: 24,
