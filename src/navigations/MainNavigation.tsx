@@ -25,6 +25,7 @@ import CustomBottomNavigation from '../screens/bottomTabs/BottomTabs';
 import ProfileSetup from '../screens/profile/ProfileSetup';
 import CapturedDataEdit from '../screens/captureData/CapturedDataEdit';
 import EditContent from '../screens/scanOptions/EditContent';
+import SearchUser from '../screens/searchUsers/SearchUser';
 
 const Stack = createStackNavigator();
 const MainNavigation = () => {
@@ -55,6 +56,7 @@ const MainNavigation = () => {
       <Stack.Screen name="AccountSettings" component={AccountSettings} />
       <Stack.Screen name="Messages" component={Messages} />
       <Stack.Screen name="CapturedDataEdit" component={CapturedDataEdit} />
+      <Stack.Screen name="SearchUser" component={SearchUser} />
       <Stack.Screen name="EditContent" component={EditContent} />
 
     </Stack.Navigator>

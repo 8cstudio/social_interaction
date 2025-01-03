@@ -16,7 +16,10 @@ import {colors} from '../../assets/data/colors';
 import {FirebaseError, validateField} from '../../assets/data/InputValidation';
 import {styles} from './styles';
 import CustomAlert from '../../components/modals/CustomAlert';
-import { handleSignUp, signInWithGoogle } from '../../components/functions/AuthFunctions';
+import {
+  handleSignUp,
+  signInWithGoogle,
+} from '../../components/functions/AuthFunctions';
 const SignUp = ({navigation}: any) => {
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [alertData, setAlertData] = useState({
@@ -95,7 +98,7 @@ const SignUp = ({navigation}: any) => {
   //                           index: 1,
   //                           routes: [
   //                             {name: 'LoginScreen'},
-  //                             {name: 'ProfileSetting'}, 
+  //                             {name: 'ProfileSetting'},
   //                           ],
   //                         });
   //                       },
@@ -144,133 +147,139 @@ const SignUp = ({navigation}: any) => {
     });
   }
   return (
-
     <KeyboardAvoidingView
       style={{flex: 1}}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-    <SafeAreaView style={{flex: 1}}>
-      <TouchableOpacity
-        style={{paddingTop: 20, paddingLeft: 10}}
-        onPress={() => navigation.goBack()}>
+      <SafeAreaView style={{flex: 1}}>
+        <TouchableOpacity
+          style={{paddingTop: 20, paddingLeft: 10}}
+          onPress={() => navigation.goBack()}>
           {/* // icon here */}
-      </TouchableOpacity>
-      <ScrollView>
-        <View
-          style={{
-            paddingHorizontal: 15,
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            paddingTop:10,
-          }}>
-          <Text
+        </TouchableOpacity>
+        <ScrollView>
+          <View
             style={{
-              // marginTop: 15,
-              fontSize: 30,
-              fontWeight: '700',
-              color: colors.headingColor,
+              paddingHorizontal: 15,
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              paddingTop: 10,
             }}>
-            Create Your Account
-          </Text>
-          <Text
-            style={{
-              marginVertical: 10,
-              textAlign: 'center',
-              color: colors.lightGray1,
-            }}>
-            Experience Fitness, Virtually Perfect.{'\n'}
-            Try Before You Buy with Kenna Fitness AR
-          </Text>
-          <View style={{width: '100%', height: 60, marginTop: 15}}>
-            <CustomTextInput
-            autoCapitalize
-              onError={
-                formErrors.userNameError !== 'true' && formErrors.userNameError
-                  ? true
-                  : false
-              }
-              bg={colors.iconBackground}
-              backgroundColor
-              placeholder={'Username'}
-              iconName={'user-large'}
-              iconFamily={'fontAwesome6'}
-              iconColor={colors.inputPlaceholder}
-              iconSize={15}
-              // prefixIcon={require('../../assets/icons/lock.png')}
-              value={formData.userName}
-              onChangeText={(text: any) => handleInputChange('userName', text)}
-            />
-          </View>
-          {formErrors.userNameError !== 'true' && formErrors.userNameError && (
-            <Text style={styles.error}>{formErrors.userNameError}</Text>
-          )}
-          <View style={{width: '100%', height: 60, marginTop: 15}}>
-            <CustomTextInput
-              autoCapitalize
-              bg={colors.iconBackground}
-              backgroundColor
-              placeholder={'Email'}
-              iconName={'mail'}
-              iconFamily={'antDesign'}
-              iconColor={colors.inputPlaceholder}
-              iconSize={15}
-              // prefixIcon={require('../../assets/icons/lock.png')}
-              value={formData.email}
-              onChangeText={(text: any) => handleInputChange('email', text)}
-            />
-          </View>
-          {formErrors.emailError !== 'true' && formErrors.emailError && (
-            <Text style={styles.error}>{formErrors.emailError}</Text>
-          )}
-          <View style={{width: '100%', height: 60, marginTop: 15}}>
-            <CustomTextInput
-              bg={colors.iconBackground}
-              backgroundColor
-              placeholder={'Password'}
-              iconName={'lock'}
-              iconSize={15}
-              iconFamily={'fontAwesome6'}
-              iconColor={colors.inputPlaceholder}
-              // prefixIcon={require('../../assets/icons/lock.png')}
-              isSecure={true}
-              value={formData.password}
-              onChangeText={(text: any) => handleInputChange('password', text)}
-              isSecureTextEntry={true}
-            />
-          </View>
-          {formErrors.passwordError !== 'true' && formErrors.passwordError && (
-            <Text style={styles.error}>{formErrors.passwordError}</Text>
-          )}
-          <View style={{width: '100%', height: 60, marginTop: 15}}>
-            <CustomTextInput
-              bg={colors.iconBackground}
-              backgroundColor
-              placeholder={'Confirm Password'}
-              iconName={'lock'}
-              iconSize={15}
-              iconFamily={'fontAwesome6'}
-              iconColor={colors.inputPlaceholder}
-              // prefixIcon={require('../../assets/icons/lock.png')}
-              isSecure={true}
-              isSecureTextEntry={true}
-              value={formData.confirmPassword}
-              onChangeText={(text: any) =>
-                handleInputChange('confirmPassword', text)
-              }
-            />
-          </View>
-          {formErrors.confirmPasswordError === 'true' &&
-            formData.password !== formData.confirmPassword && (
-              <Text style={styles.error}>
-                Confirm password should match with password.
-              </Text>
+            <Text
+              style={{
+                // marginTop: 15,
+                fontSize: 30,
+                fontWeight: '700',
+                color: colors.headingColor,
+              }}>
+              Create Your Account
+            </Text>
+            <Text
+              style={{
+                marginVertical: 10,
+                textAlign: 'center',
+                color: colors.lightGray1,
+              }}>
+              Experience Fitness, Virtually Perfect.{'\n'}
+              Try Before You Buy with Kenna Fitness AR
+            </Text>
+            <View style={{width: '100%', height: 60, marginTop: 15}}>
+              <CustomTextInput
+                autoCapitalize
+                onError={
+                  formErrors.userNameError !== 'true' &&
+                  formErrors.userNameError
+                    ? true
+                    : false
+                }
+                bg={colors.iconBackground}
+                backgroundColor
+                placeholder={'Username'}
+                iconName={'user-large'}
+                iconFamily={'fontAwesome6'}
+                iconColor={colors.inputPlaceholder}
+                iconSize={15}
+                // prefixIcon={require('../../assets/icons/lock.png')}
+                value={formData.userName}
+                onChangeText={(text: any) =>
+                  handleInputChange('userName', text)
+                }
+              />
+            </View>
+            {formErrors.userNameError !== 'true' &&
+              formErrors.userNameError && (
+                <Text style={styles.error}>{formErrors.userNameError}</Text>
+              )}
+            <View style={{width: '100%', height: 60, marginTop: 15}}>
+              <CustomTextInput
+                autoCapitalize
+                bg={colors.iconBackground}
+                backgroundColor
+                placeholder={'Email'}
+                iconName={'mail'}
+                iconFamily={'antDesign'}
+                iconColor={colors.inputPlaceholder}
+                iconSize={15}
+                // prefixIcon={require('../../assets/icons/lock.png')}
+                value={formData.email}
+                onChangeText={(text: any) => handleInputChange('email', text)}
+              />
+            </View>
+            {formErrors.emailError !== 'true' && formErrors.emailError && (
+              <Text style={styles.error}>{formErrors.emailError}</Text>
             )}
-          {formErrors.confirmPasswordError !== 'true' &&
-            formErrors.confirmPasswordError && (
-              <Text style={styles.error}>
-                {formErrors.confirmPasswordError}
-              </Text>
-            )}
-          {/* <View
+            <View style={{width: '100%', height: 60, marginTop: 15}}>
+              <CustomTextInput
+                bg={colors.iconBackground}
+                backgroundColor
+                placeholder={'Password'}
+                iconName={'lock'}
+                iconSize={15}
+                iconFamily={'fontAwesome6'}
+                iconColor={colors.inputPlaceholder}
+                // prefixIcon={require('../../assets/icons/lock.png')}
+                isSecure={true}
+                value={formData.password}
+                onChangeText={(text: any) =>
+                  handleInputChange('password', text)
+                }
+                isSecureTextEntry={true}
+              />
+            </View>
+            {formErrors.passwordError !== 'true' &&
+              formErrors.passwordError && (
+                <Text style={styles.error}>{formErrors.passwordError}</Text>
+              )}
+            <View style={{width: '100%', height: 60, marginTop: 15}}>
+              <CustomTextInput
+                bg={colors.iconBackground}
+                backgroundColor
+                placeholder={'Confirm Password'}
+                iconName={'lock'}
+                iconSize={15}
+                iconFamily={'fontAwesome6'}
+                iconColor={colors.inputPlaceholder}
+                // prefixIcon={require('../../assets/icons/lock.png')}
+                isSecure={true}
+                isSecureTextEntry={true}
+                value={formData.confirmPassword}
+                onChangeText={(text: any) =>
+                  handleInputChange('confirmPassword', text)
+                }
+              />
+            </View>
+            {formErrors.confirmPasswordError === 'true' &&
+              formData.password !== formData.confirmPassword && (
+                <Text style={styles.error}>
+                  Confirm password should match with password.
+                </Text>
+              )}
+            {formErrors.confirmPasswordError !== 'true' &&
+              formErrors.confirmPasswordError && (
+                <Text style={styles.error}>
+                  {formErrors.confirmPasswordError}
+                </Text>
+              )}
+            {/* <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
@@ -283,65 +292,73 @@ const SignUp = ({navigation}: any) => {
               Remember me
             </Text>
           </View> */}
-          <View style={{width: '100%', marginTop: 10}}>
-            <CustomButton
-              disabled={
-                !(formErrors.userNameError === 'true') ||
-                !(formErrors.emailError === 'true') ||
-                !(formErrors.passwordError === 'true') ||
-                !(formErrors.confirmPasswordError === 'true') ||
-                formData.password !== formData.confirmPassword
-              }
-              title={'Sign Up'}
-              btnColor={
-                !(formErrors.userNameError === 'true') ||
-                !(formErrors.emailError === 'true') ||
-                !(formErrors.passwordError === 'true') ||
-                !(formErrors.confirmPasswordError === 'true') ||
-                formData.password !== formData.confirmPassword
-                  ? colors.gray
-                  :
-                   colors.black
-              }
-              btnTextColor={'#fff'}
-              icon={undefined}
-              onPress={()=>handleSignUp(setISLoading, formData, navigation, setIsAlertVisible, setAlertData, alert)}
-              // onPress={()=>navigation.goBack()}
-              borderRadius={50}
-              isLoading={isLoading}
-            />
-          </View>
-          <View
-            style={{
-              marginTop: 15,
-              marginBottom: 15,
-              flexDirection: 'row',
-              marginVertical: 5,
-              alignItems: 'center',
-            }}>
+            <View style={{width: '100%', marginTop: 10}}>
+              <CustomButton
+                disabled={
+                  !(formErrors.userNameError === 'true') ||
+                  !(formErrors.emailError === 'true') ||
+                  !(formErrors.passwordError === 'true') ||
+                  !(formErrors.confirmPasswordError === 'true') ||
+                  formData.password !== formData.confirmPassword
+                }
+                title={'Sign Up'}
+                btnColor={
+                  !(formErrors.userNameError === 'true') ||
+                  !(formErrors.emailError === 'true') ||
+                  !(formErrors.passwordError === 'true') ||
+                  !(formErrors.confirmPasswordError === 'true') ||
+                  formData.password !== formData.confirmPassword
+                    ? colors.gray
+                    : colors.black
+                }
+                btnTextColor={'#fff'}
+                icon={undefined}
+                onPress={() =>
+                  handleSignUp(
+                    setISLoading,
+                    formData,
+                    navigation,
+                    setIsAlertVisible,
+                    setAlertData,
+                    alert,
+                  )
+                }
+                // onPress={()=>navigation.goBack()}
+                borderRadius={50}
+                isLoading={isLoading}
+              />
+            </View>
             <View
-              style={{height: 2, width: '45%', backgroundColor: '#EAEAEA'}}
-            />
-            <Text
               style={{
-                color: '#5C5C5C',
-                fontSize: 18,
-                padding: 5,
-                marginBottom: 3,
+                marginTop: 15,
+                marginBottom: 15,
+                flexDirection: 'row',
+                marginVertical: 5,
+                alignItems: 'center',
               }}>
-              or continue with
-            </Text>
+              <View
+                style={{height: 2, width: '45%', backgroundColor: '#EAEAEA'}}
+              />
+              <Text
+                style={{
+                  color: '#5C5C5C',
+                  fontSize: 18,
+                  padding: 5,
+                  marginBottom: 3,
+                }}>
+                or continue with
+              </Text>
+              <View
+                style={{height: 2, width: '45%', backgroundColor: '#EAEAEA'}}
+              />
+            </View>
             <View
-              style={{height: 2, width: '45%', backgroundColor: '#EAEAEA'}}
-            />
-          </View>
-          <View
-            style={{
-              width: '100%',
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-            }}>
-            {/* <View
+              style={{
+                width: '100%',
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+              }}>
+              {/* <View
               style={{
                 height: 65,
                 width: 80,
@@ -357,25 +374,25 @@ const SignUp = ({navigation}: any) => {
                 source={require('../../assets/images/fb.png')}
               />
             </View> */}
-            <TouchableOpacity 
+              <TouchableOpacity
                 disabled={isLoading}
                 onPress={() => signInWithGoogle(setISLoading, navigation)}
-              style={{
-                height: 65,
-                width: 80,
-                borderWidth: 1,
-                borderRadius: 10,
-                borderColor: '#E5E0E0',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Image
-                resizeMode="contain"
-                style={{height: 30, width: 30}}
-                source={require('../../assets/images/google.png')}
-              />
-            </TouchableOpacity>
-            {/* <View
+                style={{
+                  height: 65,
+                  width: 80,
+                  borderWidth: 1,
+                  borderRadius: 10,
+                  borderColor: '#E5E0E0',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Image
+                  resizeMode="contain"
+                  style={{height: 30, width: 30}}
+                  source={require('../../assets/images/google.png')}
+                />
+              </TouchableOpacity>
+              {/* <View
               style={{
                 height: 65,
                 width: 80,
@@ -391,38 +408,39 @@ const SignUp = ({navigation}: any) => {
                 source={require('../../assets/images/apple.png')}
               />
             </View> */}
-          </View>
-          <View style={{flexDirection: 'row', marginTop: 15}}>
-            <Text style={{color: colors.lightGray1, 
-            
-            // fontFamily: fonts.f300
+            </View>
+            <View style={{flexDirection: 'row', marginTop: 15}}>
+              <Text
+                style={{
+                  color: colors.lightGray1,
 
-            }}>
-              Already have an account?{' '}
-            </Text>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('LoginScreen');
-              }}>
-              <Text style={{color: '#000', 
-                // fontFamily: fonts.f600
-                
+                  // fontFamily: fonts.f300
                 }}>
-                Sign In
+                Already have an account?{' '}
               </Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('LoginScreen');
+                }}>
+                <Text
+                  style={{
+                    color: '#000',
+                    // fontFamily: fonts.f600
+                  }}>
+                  Sign In
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </ScrollView>
-      <CustomAlert
-        message={alertData.message}
-        title={alertData.title}
-        visible={isAlertVisible}
-        onPress={alertData.onPress}
-        onRequestClose={handleOK}
-      />
-    </SafeAreaView>
-
+        </ScrollView>
+        <CustomAlert
+          message={alertData.message}
+          title={alertData.title}
+          visible={isAlertVisible}
+          onPress={alertData.onPress}
+          onRequestClose={handleOK}
+        />
+      </SafeAreaView>
     </KeyboardAvoidingView>
   );
 };

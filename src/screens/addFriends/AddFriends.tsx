@@ -21,32 +21,6 @@ import CustomAlert from '../../components/modals/CustomAlert';
 const AddFriendsScreen = ({navigation, route}: any) => {
   const from = route?.params?.from ?? null;
   const [searchText, setSearchText] = useState('');
-  const suggestions = [
-    {
-      id: '1',
-      name: 'Saeed',
-      username: '@Saeedxii',
-      avatar: require('../../assets/images/profile.png'),
-    },
-    {
-      id: '2',
-      name: 'Nasser',
-      username: '@NasserSaud',
-      avatar: require('../../assets/images/profile.png'),
-    },
-    {
-      id: '3',
-      name: 'Asmaa',
-      username: '@Asmaa2005',
-      avatar: require('../../assets/images/profile.png'),
-    },
-    {
-      id: '4',
-      name: 'Maram',
-      username: '@Maramii9',
-      avatar: require('../../assets/images/profile.png'),
-    },
-  ];
   const [isQuickAddSelected, setIsQuickAddSelected] = useState(true); // Initially set to true for 'Added' users
   const p = useSelector((state: any) => state.profile);
   const profile: any = p.data;
@@ -507,10 +481,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   avatarStyle: {
-    // width: fontSize(60),
-    // height: fontSize(60),
-    // borderRadius: 50,
-    // marginRight: 10,
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+    marginRight: 10,
   },
   suggestionText: {
     flex: 1,

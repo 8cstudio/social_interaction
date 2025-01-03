@@ -49,7 +49,8 @@ const ProfileSetup = ({navigation, route}: any) => {
   const [formErrors, setFormErrors] = useState({
     nameError: validateField('name', profilex?.name) ?? null,
     locationError: validateField('location', profilex?.location) ?? null,
-    descriptionError: validateField('description', profilex?.description) ?? null,
+    descriptionError:
+      validateField('description', profilex?.description) ?? null,
     userNameError: validateField('userName', profilex?.userName) ?? null,
     phoneNumberError:
       validateField('phoneNumber', profilex?.phoneNumber) ?? null,
@@ -129,7 +130,6 @@ const ProfileSetup = ({navigation, route}: any) => {
         profile = await uploadProfilePic();
       }
 
-
       // navigation.navigate('SelectCategory', {
       //   title: title,
       //   name: formData.name,
@@ -162,17 +162,12 @@ const ProfileSetup = ({navigation, route}: any) => {
             title: 'Success',
             message: `Profile data saved successfully`,
             onPress: () => {
-              navigation.goBack();
               // navigation.navigate('SelectCategory');
-              // navigation.reset({
-              //   index: 1,
-              //   routes: [
-              //     {name: 'SocialAuth'}, // First screen you want to keep
-              //     {name: 'LoginScreen'}, // The new screen you want to navigate to
-              //   ],
-              // });
+              navigation.reset({
+                index: 0,
+                routes: [{name: 'Home', params: {id: 2}}],
+              });
               // setIsAlertVisible(false);
-
             },
           });
           console.log('User name uploaded successfully');
@@ -351,7 +346,6 @@ const ProfileSetup = ({navigation, route}: any) => {
                     handleInputChange('description', text)
                   }
                   backgroundColor
-                  
                   bg={colors.iconBackground}
                 />
               </View>
@@ -379,16 +373,13 @@ const ProfileSetup = ({navigation, route}: any) => {
                     handleInputChange('location', text)
                   }
                   backgroundColor
-                  
                   bg={colors.iconBackground}
                 />
               </View>
 
               {formErrors.locationError !== 'true' &&
                 formErrors.locationError && (
-                  <Text style={styles.error}>
-                    {formErrors.locationError}
-                  </Text>
+                  <Text style={styles.error}>{formErrors.locationError}</Text>
                 )}
               <View style={{flex: 1, height: 20}} />
               <View style={styles.buttonsView}>

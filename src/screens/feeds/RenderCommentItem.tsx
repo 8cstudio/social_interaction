@@ -14,8 +14,8 @@ import {useEffect, useState} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {fontSize} from '../../assets/data/TypeScript';
-import { formatTimeStamp } from '../../components/functions/GlobalFunctions';
-import { fontsInter } from '../../assets/fonts/Fonts';
+import {formatTimeStamp} from '../../components/functions/GlobalFunctions';
+import {fontsInter} from '../../assets/fonts/Fonts';
 
 const renderCommentItem = ({
   comment,
@@ -90,7 +90,7 @@ const renderCommentItem = ({
           marginBottom: 10,
           justifyContent: 'flex-start',
           // width: '80%',
-          flex: 1
+          flex: 1,
         }}>
         {/* <Text
           style={{
@@ -100,7 +100,7 @@ const renderCommentItem = ({
           }}>
           {userData.name}
         </Text> */}
-        <View style={{flexDirection: 'row', flex: 1, gap: 3}}>
+        <View style={{flexDirection: 'row', gap: 3}}>
           <Text
             ellipsizeMode="tail"
             numberOfLines={1}
@@ -113,20 +113,36 @@ const renderCommentItem = ({
             {userData.name}
           </Text>
         </View>
-        <View style={{flexDirection: 'row'}}>
+        <View style={{flexDirection: 'row', alignItems:'center', justifyContent:'flex-start'}}>
           <Text
+            style={{
+              fontSize: 15,
+              color: colors.black,
+              textAlign: 'left',
+              // fontFamily: fonts.f400,
+              flex: 1,
+            }}>
+            {comment.message}{'  '}<Text  style={{
+              fontSize: 13,
+              color: colors.grey,
+              fontFamily: fontsInter.f400,
+            }}>{formattedTime}
+              </Text>
+          </Text>
+          {/* i commented taimoor */}
+          {/* <Text
             style={{
               fontSize: 13,
               color: colors.grey,
               fontFamily: fontsInter.f400,
             }}>
             {formattedTime}
-          </Text>
+          </Text> */}
           <View>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               hitSlop={10}
               onPress={() => {
-                handleReplyPress(commentIndex);
+                // handleReplyPress(commentIndex);
               }}>
               <Text
                 style={{
@@ -137,7 +153,7 @@ const renderCommentItem = ({
                 {' '}
                 Reply
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             {comment?.reply && comment?.reply?.length > 0 ? (
               <FlatList
                 data={comment?.reply || []}
@@ -160,7 +176,8 @@ const renderCommentItem = ({
                 keyExtractor={(reply, index) => index.toString()}
               />
             ) : (
-              <></>
+              <>
+              </>
             )}
           </View>
         </View>
@@ -226,7 +243,11 @@ export function RenderReplyComment({
   const [currentPlaying, setCurrentPlaying] = useState<string>('');
   let seconds;
   const [playReplyComment, setPlayReplyComment] = useState(true);
-  const [replyUserData, setReplyUserData] = useState({name: '', pic: '', penguin: false});
+  const [replyUserData, setReplyUserData] = useState({
+    name: '',
+    pic: '',
+    penguin: false,
+  });
   useEffect(() => {
     const fetchReplyUserData = async () => {
       const data = await getUserData(reply?.userID);
@@ -289,7 +310,7 @@ export function RenderReplyComment({
           }}>
           {replyUserData.name}
         </Text> */}
-        
+
         <View style={{flexDirection: 'row', flex: 1, gap: 3}}>
           <Text
             ellipsizeMode="tail"
