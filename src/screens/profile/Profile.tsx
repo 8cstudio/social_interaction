@@ -31,7 +31,7 @@ const Profile = ({navigation, route}: any) => {
   const myId = auth().currentUser?.uid;
   const [profile, setProfile] = useState(id === null && profilex);
   const myProfile = id === null ? true : false;
-  console.log(myProfile);
+  // console.log(myProfile);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
@@ -57,8 +57,8 @@ const Profile = ({navigation, route}: any) => {
     );
     return () => unsubscribe();
   }
-  console.log('other id: ', id);
-  console.log('my id: ', myId);
+  // console.log('other id: ', id);
+  // console.log('my id: ', myId);
   // console.log("other user data: ",profile);
 
   useEffect(() => {
@@ -179,7 +179,7 @@ const Profile = ({navigation, route}: any) => {
     try {
       const feeds = firestore()
         .collection('feeds')
-        .doc(auth().currentUser?.uid);
+        .doc(id ? id : auth().currentUser?.uid);
       const doc = await feeds.get();
       let allData: any = [];
       if (!doc.exists) {
@@ -194,7 +194,7 @@ const Profile = ({navigation, route}: any) => {
       setAllFeedsCollection([]);
     }
   };
-  console.log(allFeedsCollection);
+  console.log('allFeedsCollection: ', allFeedsCollection);
 
   return (
     <SafeAreaView style={{flex: 1, padding: 0}}>
@@ -231,17 +231,32 @@ const Profile = ({navigation, route}: any) => {
               flex: 1,
             }}>
             <View style={styles.likesView}>
-              <Text style={{color: colors.black}}>25</Text>
-              <Text style={{color: colors.black}}>Likes</Text>
+              <Text style={{color: colors.black}}>
+                {allFeedsCollection?.length ? allFeedsCollection?.length : '0'}
+              </Text>
+              <Text style={{color: colors.black}}>Posts</Text>
             </View>
 
             <View style={styles.likesView}>
-              <Text style={{color: colors.black}}>25</Text>
-              <Text style={{color: colors.black}}>Likes</Text>
+              <Text style={{color: colors.black}}>
+                {' '}
+                {myProfile
+                  ? Object.keys(profilex?.friends || {}).length +
+                    Object.keys(profilex?.friendRequests || {}).length
+                  : Object.keys(profile?.friends || {}).length +
+                    Object.keys(profile?.friendRequests || {}).length}
+              </Text>
+              <Text style={{color: colors.black}}>Followers</Text>
             </View>
 
             <View style={styles.likesView}>
-              <Text style={{color: colors.black}}>25</Text>
+              <Text style={{color: colors.black}}>
+
+                {allFeedsCollection?.length>0?allFeedsCollection?.reduce(
+                  (total: any, video: any) => total + (video.likes || 0),
+                  0,
+                ):'0'}
+              </Text>
               <Text style={{color: colors.black}}>Likes</Text>
             </View>
           </View>
@@ -419,7 +434,14 @@ const Profile = ({navigation, route}: any) => {
         ) : allFeedsCollection === null ? (
           <ActivityIndicator size={'large'} color={'black'} />
         ) : (
-          <Text style={{fontSize: 18, color: colors.black,textAlign:'center', fontWeight:'700', marginVertical:30}}>
+          <Text
+            style={{
+              fontSize: 18,
+              color: colors.black,
+              textAlign: 'center',
+              fontWeight: '700',
+              marginVertical: 30,
+            }}>
             No Data Available
           </Text>
         )}
