@@ -70,7 +70,7 @@ export const onStartRecord = async (setIsRecording: any) => {
   });
   setIsRecording(true);
 };
-export const onStopRecord = async (setIsRecording:any, setRecordedFile:any) => {
+export const onStopRecord = async (setIsRecording, setRecordedFile) => {
   try {
     const result = await audioRecorderPlayer.stopRecorder();
     audioRecorderPlayer.removeRecordBackListener();

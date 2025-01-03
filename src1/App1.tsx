@@ -149,10 +149,13 @@ export const ListItem = React.memo(
         });
     }
     useEffect(() => {
+      if(!item?.path){
+        return
+      }
       let path = '';
       // console.log("Item path", item.path);
       
-      if (item.path.startsWith('https://')) {
+      if (item?.path?.startsWith('https://')) {
         path = nameFile(item.path);
       } else {
         path = item.path;
@@ -188,7 +191,7 @@ export const ListItem = React.memo(
     useEffect(() => {
       // Trigger auto-download when the component mounts if file is not present
       if (!file) {
-        downloadFile();
+        // downloadFile();
       }
     }, []);
     return (
